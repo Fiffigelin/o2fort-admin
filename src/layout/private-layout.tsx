@@ -1,10 +1,9 @@
 import { Outlet } from "react-router-dom";
-import { IoGridOutline } from "react-icons/io5";
+import { MdOutlineEventAvailable, MdOutlineHome } from "react-icons/md";
 import { TbVocabulary } from "react-icons/tb";
 import { useAuth } from "../api/auth-context";
-import type { SidebarItem } from "../components/sidebar/sidebar";
 import Sidebar from "../components/sidebar/sidebar";
-import Header from "../components/header/header";
+import type { NavbarItem } from "../components/sidebar/sidebar-item";
 
 export default function PrivateLayout() {
 	const { user } = useAuth();
@@ -13,17 +12,21 @@ export default function PrivateLayout() {
 		return <p>Loading...</p>;
 	}
 
-	const navItems: SidebarItem[] = [
-		{ label: "Dashboard", icon: <IoGridOutline size={24} />, goTo: "/home" },
-		{ label: "Page 2", icon: <TbVocabulary size={24} />, goTo: "/page-2" },
+	const navItems: NavbarItem[] = [
+		{ label: "Start", icon: <MdOutlineHome />, to: "/" },
+		{
+			label: "Evenemang",
+			icon: <MdOutlineEventAvailable />,
+			to: "/evenemang",
+		},
+		{ label: "Wiki", icon: <TbVocabulary />, to: "/wiki" },
 	];
 
 	return (
-		<div className="min-h-screen min-w-screen overflow-y-hidden flex">
+		<div className="w-full h-screen overflow-hidden flex flex-row">
 			<Sidebar sidebarItems={navItems} />
-			<section className="w-full flex flex-col bg-neutral-50">
-				<Header name={user.email} />
-				<Outlet context={{ user: user }} />
+			<section className="w-full p-10">
+				<Outlet />
 			</section>
 		</div>
 	);
