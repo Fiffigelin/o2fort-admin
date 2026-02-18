@@ -26,3 +26,8 @@ Vad ska denna admin sida kunna göra och hur är flödet?
 - - [ ] Skapas ett event skickas bilden från /uploaded till /events och bilden på /uploaded raderas samt en refresh körs på GET och användaren skickas tillbaka till startsidan
 - - [ ] Skapas INTE ett event ska bilden raderas från /uploaded
 - - [ ] Händer inget på säg 15min ska ett script köras så att bilden raderas automatiskt??? Hmmm.... kommande feature?
+
+# Kommande features?
+- [ ] En användare ska kunna ladda upp fler bilder och skapa flera events samtidigt
+- [ ] Implementera AgGrid för snyggare visuell visning
+- [ ] Ta bort gamla efter att datumet passerat alternativt lägga undan eventet eller sätta en flagga på klassobjektet <== inte tänkt klart här
