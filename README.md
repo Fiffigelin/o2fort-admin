@@ -1,73 +1,28 @@
-# React + TypeScript + Vite
+## Admin verktyg för O2FORT med event hantering för att ladda upp bilder till hemsidan.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Vad ska denna admin sida kunna göra och hur är flödet?
 
-Currently, two official plugins are available:
+`table EVENTS`
+`id: uuid`
+`datum: Date`
+`title: string/text`
+`image: string/text`
+`added_date: timestamp`
+`added_user: User` <== nödvändigt? Prata med SpaceCode
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## React Compiler
+# Vad ska en användare kunna göra?
+- [ ] En användare ska kunna se alla event
+- [ ] En användare ska kunna skapa ett event
+- [ ] En användare ska kunna ändra ett event
+- [ ] En användare ska kunna radera ett event
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Hur ska flödet vara?
+- [ ] En användare ska kunna ladda upp en bild
+- [ ] Bilden ska laddas upp till en folder /uploaded
+- [ ] När sidan får tillbaka url från bucket ska användaren skickas till ny sida
+- [ ] Nya sidan:
+- - [ ] Här ska användaren kunna skapa ett event och fylla i datum för eventet, titel och med den uppladdade bilden
+- - [ ] Skapas ett event skickas bilden från /uploaded till /events och bilden på /uploaded raderas samt en refresh körs på GET och användaren skickas tillbaka till startsidan
+- - [ ] Skapas INTE ett event ska bilden raderas från /uploaded
+- - [ ] Händer inget på säg 15min ska ett script köras så att bilden raderas automatiskt??? Hmmm.... kommande feature?
