@@ -42,12 +42,15 @@ export default function Datepicker({
 }: DatepickerProps) {
 	const [showDatepicker, setShowDatepicker] = useState(false);
 	const [datepickerValue, setDatepickerValue] = useState("");
-	const [selectedDate, setSelectedDate] = useState(initialDate);
+	const [selectedDate, setSelectedDate] = useState<Date | null>(
+		initialDate ? new Date(initialDate) : null,
+	);
 	const [month, setMonth] = useState(0);
 	const [year, setYear] = useState(0);
 	const [noOfDays, setNoOfDays] = useState<number[]>([]);
 	const [blankDays, setBlankDays] = useState<number[]>([]);
 	const dateInputRef = useRef<HTMLInputElement | null>(null);
+	const datepickerRef = useRef<HTMLDivElement | null>(null);
 
 	// Init
 	useEffect(() => {
@@ -55,52 +58,68 @@ export default function Datepicker({
 		setMonth(today.getMonth());
 		setYear(today.getFullYear());
 		setDatepickerValue(formatDateForDisplay(today));
+		if (!selectedDate) setSelectedDate(today);
 	}, [initialDate]);
 
 	useEffect(() => {
 		calculateNoOfDays(month, year);
 	}, [month, year]);
 
+	// Click outside
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				datepickerRef.current &&
+				!datepickerRef.current.contains(event.target as Node)
+			) {
+				setShowDatepicker(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
+	}, []);
+
 	const formatDateForDisplay = (date: Date) => {
 		const formattedDay = DAYS[date.getDay()];
 		const formattedDate = ("0" + date.getDate()).slice(-2);
-		const formattedMonth = MONTH_NAMES[date.getMonth()];
 		const formattedMonthShort = MONTH_SHORT_NAMES[date.getMonth()];
 		const formattedMonthNum = ("0" + (date.getMonth() + 1)).slice(-2);
 		const formattedYear = date.getFullYear();
 
-		if (dateFormat === "DD-MM-YYYY") {
+		if (dateFormat === "DD-MM-YYYY")
 			return `${formattedDate}-${formattedMonthNum}-${formattedYear}`;
-		}
-		if (dateFormat === "YYYY-MM-DD") {
+		if (dateFormat === "YYYY-MM-DD")
 			return `${formattedYear}-${formattedMonthNum}-${formattedDate}`;
-		}
-		if (dateFormat === "D d M, Y") {
+		if (dateFormat === "D d M, Y")
 			return `${formattedDay} ${formattedDate} ${formattedMonthShort} ${formattedYear}`;
-		}
-		return `${formattedDay} ${formattedDate} ${formattedMonth} ${formattedYear}`;
+		return `${formattedDay} ${formattedDate} ${formattedMonthShort} ${formattedYear}`;
 	};
 
 	const isSelectedDate = (date: number) => {
-		const d = new Date(year, month, date);
-		return datepickerValue === formatDateForDisplay(d);
+		if (!selectedDate) return false;
+		return (
+			selectedDate.getFullYear() === year &&
+			selectedDate.getMonth() === month &&
+			selectedDate.getDate() === date
+		);
 	};
 
 	const isToday = (date: number) => {
 		const today = new Date();
-		const d = new Date(year, month, date);
-		return today.toDateString() === d.toDateString();
+		return (
+			today.getFullYear() === year &&
+			today.getMonth() === month &&
+			today.getDate() === date
+		);
 	};
 
 	const getDateValue = (date: number) => {
 		const selected = new Date(year, month, date);
+		setSelectedDate(selected);
 		const formatted = formatDateForDisplay(selected);
 		setDatepickerValue(formatted);
-		setSelectedDate(formatted);
 		setShowDatepicker(false);
-		if (dateInputRef.current) {
-			dateInputRef.current.value = formatted;
-		}
+		if (dateInputRef.current) dateInputRef.current.value = formatted;
 	};
 
 	const calculateNoOfDays = (month: number, year: number) => {
@@ -114,39 +133,49 @@ export default function Datepicker({
 		setNoOfDays(days);
 	};
 
-	const prevMonth = () => {
+	const prevMonth = (e: React.MouseEvent) => {
+		e.stopPropagation();
 		if (month === 0) {
 			setMonth(11);
 			setYear(year - 1);
-		} else {
-			setMonth(month - 1);
-		}
+		} else setMonth(month - 1);
 	};
 
-	const nextMonth = () => {
+	const nextMonth = (e: React.MouseEvent) => {
+		e.stopPropagation();
 		if (month === 11) {
 			setMonth(0);
 			setYear(year + 1);
-		} else {
-			setMonth(month + 1);
-		}
+		} else setMonth(month + 1);
+	};
+
+	const handleDatePicker = () => {
+		// Om det finns ett valt datum, öppna på det, annars dagens datum
+		const d = selectedDate ?? new Date();
+		setMonth(d.getMonth());
+		setYear(d.getFullYear());
+		setShowDatepicker(!showDatepicker);
 	};
 
 	return (
-		<div className="mb-5 min-w-64 w-full max-w-120 relative cursor-pointer group">
+		<div
+			ref={datepickerRef}
+			className="mb-5 min-w-64 w-full max-w-120 box-content relative cursor-pointer group"
+		>
 			<label
 				htmlFor="datepicker"
-				className="font-bold mb-1 text-gray-700 block"
+				className="block mb-2 text-xl font-medium text-gray-700"
 			>
 				Välj datum
 			</label>
 
 			<div
 				className="flex items-center text-sm bg-white h-12 border border-gray-500/30 rounded pl-2 w-full"
-				onClick={() => setShowDatepicker(!showDatepicker)}
+				onClick={handleDatePicker}
 			>
 				<BsCalendar3 className="p-2 text-gray-700/90" size={38} />
 				<input
+					ref={dateInputRef}
 					type="text"
 					value={datepickerValue}
 					readOnly
