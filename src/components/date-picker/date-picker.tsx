@@ -1,0 +1,249 @@
+import { useState, useEffect, useRef } from "react";
+import { BsCalendar3 } from "react-icons/bs";
+
+const MONTH_NAMES = [
+	"Januari",
+	"Februari",
+	"Mars",
+	"April",
+	"Maj",
+	"Juni",
+	"Juli",
+	"Augusti",
+	"September",
+	"Oktober",
+	"November",
+	"December",
+];
+const MONTH_SHORT_NAMES = [
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"Maj",
+	"Juni",
+	"July",
+	"Aug",
+	"Sep",
+	"Okt",
+	"Nov",
+	"Dec",
+];
+const DAYS = ["Sön", "Mån", "Tis", "Ons", "Tors", "Fre", "Lör"];
+
+interface DatepickerProps {
+	dateFormat?: "DD-MM-YYYY" | "YYYY-MM-DD" | "D d M, Y";
+	initialDate?: string;
+}
+
+export default function Datepicker({
+	dateFormat = "DD-MM-YYYY",
+	initialDate = "",
+}: DatepickerProps) {
+	const [showDatepicker, setShowDatepicker] = useState(false);
+	const [datepickerValue, setDatepickerValue] = useState("");
+	const [selectedDate, setSelectedDate] = useState(initialDate);
+	const [month, setMonth] = useState(0);
+	const [year, setYear] = useState(0);
+	const [noOfDays, setNoOfDays] = useState<number[]>([]);
+	const [blankDays, setBlankDays] = useState<number[]>([]);
+	const dateInputRef = useRef<HTMLInputElement | null>(null);
+
+	// Init
+	useEffect(() => {
+		const today = initialDate ? new Date(initialDate) : new Date();
+		setMonth(today.getMonth());
+		setYear(today.getFullYear());
+		setDatepickerValue(formatDateForDisplay(today));
+	}, [initialDate]);
+
+	useEffect(() => {
+		calculateNoOfDays(month, year);
+	}, [month, year]);
+
+	const formatDateForDisplay = (date: Date) => {
+		const formattedDay = DAYS[date.getDay()];
+		const formattedDate = ("0" + date.getDate()).slice(-2);
+		const formattedMonth = MONTH_NAMES[date.getMonth()];
+		const formattedMonthShort = MONTH_SHORT_NAMES[date.getMonth()];
+		const formattedMonthNum = ("0" + (date.getMonth() + 1)).slice(-2);
+		const formattedYear = date.getFullYear();
+
+		if (dateFormat === "DD-MM-YYYY") {
+			return `${formattedDate}-${formattedMonthNum}-${formattedYear}`;
+		}
+		if (dateFormat === "YYYY-MM-DD") {
+			return `${formattedYear}-${formattedMonthNum}-${formattedDate}`;
+		}
+		if (dateFormat === "D d M, Y") {
+			return `${formattedDay} ${formattedDate} ${formattedMonthShort} ${formattedYear}`;
+		}
+		return `${formattedDay} ${formattedDate} ${formattedMonth} ${formattedYear}`;
+	};
+
+	const isSelectedDate = (date: number) => {
+		const d = new Date(year, month, date);
+		return datepickerValue === formatDateForDisplay(d);
+	};
+
+	const isToday = (date: number) => {
+		const today = new Date();
+		const d = new Date(year, month, date);
+		return today.toDateString() === d.toDateString();
+	};
+
+	const getDateValue = (date: number) => {
+		const selected = new Date(year, month, date);
+		const formatted = formatDateForDisplay(selected);
+		setDatepickerValue(formatted);
+		setSelectedDate(formatted);
+		setShowDatepicker(false);
+		if (dateInputRef.current) {
+			dateInputRef.current.value = formatted;
+		}
+	};
+
+	const calculateNoOfDays = (month: number, year: number) => {
+		const daysInMonth = new Date(year, month + 1, 0).getDate();
+		const dayOfWeek = new Date(year, month).getDay();
+
+		const blanks = Array.from({ length: dayOfWeek }, (_, i) => i);
+		const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+
+		setBlankDays(blanks);
+		setNoOfDays(days);
+	};
+
+	const prevMonth = () => {
+		if (month === 0) {
+			setMonth(11);
+			setYear(year - 1);
+		} else {
+			setMonth(month - 1);
+		}
+	};
+
+	const nextMonth = () => {
+		if (month === 11) {
+			setMonth(0);
+			setYear(year + 1);
+		} else {
+			setMonth(month + 1);
+		}
+	};
+
+	return (
+		<div className="mb-5 min-w-64 w-full relative cursor-pointer group">
+			<label
+				htmlFor="datepicker"
+				className="font-bold mb-1 text-gray-700 block"
+			>
+				Välj datum
+			</label>
+
+			<div
+				className="flex items-center text-sm bg-white h-12 border border-gray-500/30 rounded pl-2 w-full"
+				onClick={() => setShowDatepicker(!showDatepicker)}
+			>
+				<BsCalendar3 className="ml-2 mr-4" size={18} />
+				<input
+					type="text"
+					value={datepickerValue}
+					readOnly
+					placeholder="Välj eventets datum"
+					className="px-2 w-full text-base h-full outline-none text-gray-500 bg-transparent cursor-pointer"
+					onKeyDown={(e) => e.key === "Escape" && setShowDatepicker(false)}
+				/>
+			</div>
+
+			{showDatepicker && (
+				<div className="bg-white rounded shadow p-4 absolute top-full left-0 w-full z-10">
+					<div className="flex justify-between items-center mb-2">
+						<div>
+							<span className="text-lg font-bold text-gray-800">
+								{MONTH_NAMES[month]}
+							</span>
+							<span className="ml-1 text-lg text-gray-600 font-normal">
+								{year}
+							</span>
+						</div>
+						<div className="flex gap-2">
+							<button
+								onClick={prevMonth}
+								className="p-1 rounded-full hover:bg-gray-100"
+							>
+								<svg
+									className="h-6 w-6 text-gray-400 cursor-pointer"
+									fill="none"
+									viewBox="0 0 28 28"
+									stroke="currentColor"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M15 19l-7-7 7-7"
+									/>
+								</svg>
+							</button>
+							<button
+								onClick={nextMonth}
+								className="p-1 rounded-full hover:bg-gray-100"
+							>
+								<svg
+									className="h-6 w-6 text-gray-400 cursor-pointer"
+									fill="none"
+									viewBox="0 0 28 28"
+									stroke="currentColor"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M9 5l7 7-7 7"
+									/>
+								</svg>
+							</button>
+						</div>
+					</div>
+
+					<div className="flex flex-wrap mb-3 -mx-1">
+						{DAYS.map((day, i) => (
+							<div key={i} style={{ width: "14.26%" }} className="px-0.5">
+								<div className="text-gray-800 font-medium text-center text-xs">
+									{day}
+								</div>
+							</div>
+						))}
+					</div>
+
+					<div className="flex flex-wrap -mx-1">
+						{blankDays.map((_, i) => (
+							<div
+								key={i}
+								style={{ width: "14.28%" }}
+								className="text-center border p-1 border-transparent text-sm"
+							></div>
+						))}
+						{noOfDays.map((date, i) => (
+							<div key={i} style={{ width: "14.28%" }} className="px-1 mb-1">
+								<div
+									onClick={() => getDateValue(date)}
+									className={`cursor-pointer mx-auto flex items-center justify-center w-8 h-8 rounded-full text-sm transition ease-in-out duration-100 ${
+										isToday(date)
+											? "bg-indigo-200"
+											: isSelectedDate(date)
+												? "bg-indigo-500 text-white hover:bg-opacity-75"
+												: "text-gray-600 hover:bg-indigo-200"
+									}`}
+								>
+									{date}
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+		</div>
+	);
+}
