@@ -133,7 +133,7 @@ export default function Datepicker({
 	};
 
 	return (
-		<div className="mb-5 min-w-64 w-full relative cursor-pointer group">
+		<div className="mb-5 min-w-64 w-full max-w-120 relative cursor-pointer group">
 			<label
 				htmlFor="datepicker"
 				className="font-bold mb-1 text-gray-700 block"
@@ -145,7 +145,7 @@ export default function Datepicker({
 				className="flex items-center text-sm bg-white h-12 border border-gray-500/30 rounded pl-2 w-full"
 				onClick={() => setShowDatepicker(!showDatepicker)}
 			>
-				<BsCalendar3 className="ml-2 mr-4" size={18} />
+				<BsCalendar3 className="p-2 text-gray-700/90" size={38} />
 				<input
 					type="text"
 					value={datepickerValue}
