@@ -5,8 +5,8 @@ import ProtectedRoute from "./protected-routes";
 import PrivateLayout from "../layout/private-layout";
 import Login from "../pages/public/login";
 import Home from "../pages/private/home";
-import Evenemang from "../pages/private/evenemang";
 import Wiki from "../pages/private/wiki";
+import CreateEvent from "../pages/private/create-event";
 
 export default function AppRoutes() {
 	const { isAuthenticated } = useAuth();
@@ -31,8 +31,8 @@ export default function AppRoutes() {
 					}
 				>
 					<Route path="/home" element={<Home />} />
-					<Route path="/evenemang" element={<Evenemang />} />
 					<Route path="/wiki" element={<Wiki />} />
+					<Route path="/event" element={<CreateEvent />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>
