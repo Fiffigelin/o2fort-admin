@@ -170,7 +170,7 @@ export default function Datepicker({
 			</label>
 
 			<div
-				className="flex items-center text-sm bg-white h-12 border border-gray-500/30 rounded pl-2 w-full"
+				className={`flex items-center text-sm bg-white h-12 border border-gray-500/30 rounded pl-2 w-full ${showDatepicker && "focus-within:ring-1 focus-within:ring-(--color-yellow)"}`}
 				onClick={handleDatePicker}
 			>
 				<BsCalendar3 className="p-2 text-gray-700/90" size={38} />

@@ -5,7 +5,7 @@ import type { UploadedFile } from "../../api/hooks/use-event";
 
 export type DragDropProps = {
 	value: UploadedFile | null;
-	onChange: (file: UploadedFile | null) => void;
+	onChange: (file: UploadedFile) => void;
 };
 
 export default function DragDrop({ value, onChange }: DragDropProps) {
@@ -27,7 +27,6 @@ export default function DragDrop({ value, onChange }: DragDropProps) {
 
 		try {
 			const uploaded = await upload(file);
-			console.log("Uploaded ", uploaded);
 			onChange(uploaded);
 		} catch (err) {
 			console.error(err);
