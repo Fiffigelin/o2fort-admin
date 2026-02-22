@@ -16,16 +16,16 @@ function TextInput({
 	valid = true,
 }: AuthProps) {
 	return (
-		<div className="mb-4 min-w-64 w-full max-w-120 box-content relative">
+		<div className="mb-4 min-w-64 w-full box-content relative">
 			<label className="block mb-2 text-xl font-medium text-gray-700">
 				{label}
 			</label>
 
-			<div className="flex items-center text-sm bg-white h-12 border rounded border-gray-500/30 w-full focus-within:ring-1 focus-within:ring-(--color-yellow)">
+			<div className="flex items-center bg-white h-12 border rounded border-gray-500/30 w-full focus-within:ring-1 focus-within:ring-(--color-yellow)">
 				<input
 					value={value}
 					type={type}
-					className="px-2 w-full h-full outline-none text-gray-500 bg-transparent"
+					className="px-2 w-full h-full text-lg outline-none text-gray-500 bg-transparent"
 					placeholder={placeholder}
 					onChange={(e) => onChange(e.target.value)}
 					required
