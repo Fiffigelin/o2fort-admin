@@ -1,12 +1,26 @@
 import { useState, useEffect, useRef } from "react";
 import { IoMdTime } from "react-icons/io";
+import type { Time } from "../../constant/types";
 
-export default function Timepicker() {
+type TimePickerProps = {
+	title: string;
+	type: "start" | "end";
+	onChange: (type: string, time: Time) => void;
+	initiatedHour?: number;
+	initiatedMinutes?: number;
+};
+export default function TimePicker({
+	title,
+	onChange,
+	initiatedHour,
+	initiatedMinutes,
+	type = "start",
+}: TimePickerProps) {
 	const wrapperRef = useRef<HTMLDivElement | null>(null);
 
 	const [open, setOpen] = useState<"hour" | "minute" | null>(null);
-	const [hour, setHour] = useState<number | null>(null);
-	const [minute, setMinute] = useState<number | null>(null);
+	const [hour, setHour] = useState<number>(initiatedHour || 10);
+	const [minute, setMinute] = useState<number>(initiatedMinutes || 0);
 
 	useEffect(() => {
 		const handleClickOutside = (e: MouseEvent) => {
@@ -25,17 +39,19 @@ export default function Timepicker() {
 	const selectHour = (h: number) => {
 		setHour(h);
 		setOpen("minute");
+		onChange(type, { hour: h, minute: minute });
 	};
 
 	const selectMinute = (m: number) => {
 		setMinute(m);
 		setOpen(null);
+		onChange(type, { hour: hour, minute: m });
 	};
 
 	return (
-		<div ref={wrapperRef} className="mb-5 min-w-40 w-full max-w-30 relative">
+		<div ref={wrapperRef} className="mb-5 w-full relative">
 			<label className="block mb-2 text-xl font-medium text-gray-700">
-				Välj starttid
+				{title}
 			</label>
 
 			<div className="flex items-center bg-white h-12 border border-gray-500/30 rounded pl-2 w-full">
@@ -51,7 +67,7 @@ export default function Timepicker() {
 						className="w-full px-2 text-lg h-full outline-none cursor-pointer bg-transparent text-center"
 					/>
 					{open === "hour" && (
-						<div className="absolute left-0 w-full bg-white shadow rounded z-20 max-h-60 overflow-y-scroll no-scrollbar">
+						<div className="absolute mt-2 left-0 w-full bg-white shadow rounded z-20 max-h-60 overflow-y-scroll no-scrollbar">
 							{Array.from({ length: 24 }).map((_, i) => (
 								<div
 									key={i}
@@ -77,7 +93,7 @@ export default function Timepicker() {
 
 					{open === "minute" && (
 						<div className="absolute top-full left-0 w-full bg-white shadow rounded z-20 text-center">
-							{[0, 30].map((m) => (
+							{[0, 15, 30, 45].map((m) => (
 								<div
 									key={m}
 									onClick={() => selectMinute(m)}

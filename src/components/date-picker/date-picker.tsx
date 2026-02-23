@@ -33,12 +33,14 @@ const DAYS = ["Sön", "Mån", "Tis", "Ons", "Tors", "Fre", "Lör"];
 
 interface DatepickerProps {
 	dateFormat?: "DD-MM-YYYY" | "YYYY-MM-DD" | "D d M, Y";
-	initialDate?: string;
+	initialDate?: Date;
+	onChange: (date: Date) => void;
 }
 
 export default function Datepicker({
 	dateFormat = "DD-MM-YYYY",
-	initialDate = "",
+	initialDate = new Date(),
+	onChange,
 }: DatepickerProps) {
 	const [showDatepicker, setShowDatepicker] = useState(false);
 	const [datepickerValue, setDatepickerValue] = useState("");
@@ -52,20 +54,19 @@ export default function Datepicker({
 	const dateInputRef = useRef<HTMLInputElement | null>(null);
 	const datepickerRef = useRef<HTMLDivElement | null>(null);
 
-	// Init
 	useEffect(() => {
 		const today = initialDate ? new Date(initialDate) : new Date();
 		setMonth(today.getMonth());
 		setYear(today.getFullYear());
 		setDatepickerValue(formatDateForDisplay(today));
-		if (!selectedDate) setSelectedDate(today);
+		setSelectedDate(today);
 	}, [initialDate]);
 
 	useEffect(() => {
 		calculateNoOfDays(month, year);
 	}, [month, year]);
 
-	// Click outside
+	// Hantera mustryck utanför kalendern == den ska stängas
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (
@@ -119,7 +120,8 @@ export default function Datepicker({
 		const formatted = formatDateForDisplay(selected);
 		setDatepickerValue(formatted);
 		setShowDatepicker(false);
-		if (dateInputRef.current) dateInputRef.current.value = formatted;
+
+		onChange(selected);
 	};
 
 	const calculateNoOfDays = (month: number, year: number) => {
@@ -150,7 +152,6 @@ export default function Datepicker({
 	};
 
 	const handleDatePicker = () => {
-		// Om det finns ett valt datum, öppna på det, annars dagens datum
 		const d = selectedDate ?? new Date();
 		setMonth(d.getMonth());
 		setYear(d.getFullYear());
@@ -180,7 +181,7 @@ export default function Datepicker({
 					value={datepickerValue}
 					readOnly
 					placeholder="Välj eventets datum"
-					className="px-2 w-full text-base h-full outline-none text-gray-500 bg-transparent cursor-pointer"
+					className="px-2 w-full text-lg h-full outline-none text-gray-500 bg-transparent cursor-pointer"
 					onKeyDown={(e) => e.key === "Escape" && setShowDatepicker(false)}
 				/>
 			</div>
