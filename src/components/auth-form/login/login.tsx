@@ -42,6 +42,7 @@ function Login({
 	);
 	return (
 		<form
+			id={"auth"}
 			className="p-8 growDown relative"
 			onSubmit={(e) => {
 				e.preventDefault();
