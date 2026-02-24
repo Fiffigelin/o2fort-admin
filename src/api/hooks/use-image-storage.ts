@@ -46,11 +46,23 @@ export function useImageStorage() {
 		return uploaded;
 	};
 
-	const removeImage = async () => {
-		if (!file) return;
+	const removeImage = async (image: UploadedFile) => {
+		if (!image) return;
 
-		await supabase.storage.from(BUCKET).remove([file.path]);
-		setFile(null);
+		try {
+			const { data, error } = await supabase.storage
+				.from(BUCKET)
+				.remove([image.path]);
+
+			if (error) {
+				throw error;
+			}
+
+			if (!data) throw new Error("Could not remove image from database");
+			return data;
+		} finally {
+			setFile(null);
+		}
 	};
 
 	const moveImageFile = async (img: UploadedFile) => {
