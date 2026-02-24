@@ -2,12 +2,12 @@ import type { NewEvent } from "../../../constant/types";
 import { useLocation, useNavigate } from "react-router-dom";
 import EventForm from "../../../components/event-form/event-form";
 import { useState } from "react";
-import { useEventWorkflow } from "../../../api/hooks/use-event-workflow";
+import { useCreateEvent } from "./use-create-event";
 
 export default function CreateEvent() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { createNewEvent } = useEventWorkflow();
+	const { createNewEvent } = useCreateEvent();
 
 	const state = location.state as { event: NewEvent };
 	const [event] = useState<NewEvent>(state.event);
@@ -16,14 +16,10 @@ export default function CreateEvent() {
 		if (!event) return;
 
 		try {
-			const result = await createNewEvent(event); // insert + select
+			const result = await createNewEvent(event);
 
 			if (result) {
-				console.log("Nytt event:", result.data);
-
-				navigate("/home", {
-					state: { newEvent: result.data }, // om du vill skicka med datan
-				});
+				navigate("/home");
 			}
 		} catch (err) {
 			console.error("Något gick fel vid skapandet:", err);

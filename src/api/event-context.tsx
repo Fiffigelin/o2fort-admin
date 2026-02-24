@@ -18,7 +18,6 @@ interface EventContextType {
 	fetchEvents: () => Promise<void>;
 	fetchUpcomingEvents: () => Promise<void>;
 	addEvent: (event: UploadEvent) => Promise<EventModel | undefined>;
-	fetchDataAfterLogin: () => Promise<void>;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -77,6 +76,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 	const addEvent = async (event: UploadEvent) => {
 		if (!user) return;
 		setLoading(true);
+
 		try {
 			const { data, error } = await supabase
 				.from("events")
@@ -89,20 +89,33 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 				.select();
 			if (error) throw error;
 			const mapped = mapEvents(data)[0];
-			setEvents((prev) => [mapped, ...prev]);
-			return mapped;
+
+			if (mapped) {
+				setEvents((prev) => [mapped, ...prev]);
+
+				const now = new Date();
+				if (mapped.start_at >= now) {
+					setUpcomingEvents((prev) =>
+						[...prev, mapped].sort(
+							(a, b) => a.start_at.getTime() - b.start_at.getTime(),
+						),
+					);
+				}
+
+				return mapped;
+			}
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	const fetchDataAfterLogin = async () => {
+	const fetchAllEvents = async () => {
 		await fetchEvents();
 		await fetchUpcomingEvents();
 	};
 
 	useEffect(() => {
-		if (isAuthenticated) fetchDataAfterLogin();
+		if (isAuthenticated) fetchAllEvents();
 	}, [isAuthenticated]);
 
 	return (
@@ -115,7 +128,6 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 				fetchEvents,
 				fetchUpcomingEvents,
 				addEvent,
-				fetchDataAfterLogin,
 			}}
 		>
 			{children}

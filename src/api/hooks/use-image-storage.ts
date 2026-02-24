@@ -1,23 +1,16 @@
 import { useState } from "react";
 import { supabase } from "../supabase-client";
-
-export type UploadedFile = {
-	name: string;
-	url: string;
-	size: number;
-	type: string;
-	path: string;
-};
+import type { UploadedFile } from "../../constant/types";
 
 const BUCKET = "images";
 const TEMP = "events/temp/";
 const SAVED = "events/saved/";
 
-export function useEvent() {
+export function useImageStorage() {
 	const [file, setFile] = useState<UploadedFile | null>(null);
 	const [uploading, setUploading] = useState(false);
 
-	const upload = async (file: File) => {
+	const uploadTempImage = async (file: File) => {
 		if (file && !file.type.startsWith("image/")) {
 			throw new Error("Endast bilder tillåtna");
 		}
@@ -53,16 +46,36 @@ export function useEvent() {
 		return uploaded;
 	};
 
-	const remove = async () => {
+	const removeImage = async () => {
 		if (!file) return;
 
 		await supabase.storage.from(BUCKET).remove([file.path]);
 		setFile(null);
 	};
 
-	const moveFile = async () => {
-		const { error } = await supabase.storage.from(BUCKET).move(TEMP, SAVED);
+	const moveImageFile = async (img: UploadedFile) => {
+		if (!img.path) throw new Error("No path provided");
+
+		const fileName = img.path.split("/").pop();
+		if (!fileName) throw new Error("Invalid file path");
+
+		const newPath = `${SAVED}${fileName}`;
+
+		const { error } = await supabase.storage
+			.from(BUCKET)
+			.move(img.path, newPath);
 		if (error) throw error;
+
+		const { data } = await supabase.storage
+			.from(BUCKET)
+			.createSignedUrl(newPath, 60 * 60);
+		if (!data) throw new Error("Could not create signed URL");
+
+		setFile((prev) =>
+			prev ? { ...prev, path: newPath, url: data.signedUrl } : prev,
+		);
+
+		return newPath;
 	};
 
 	function sanitizeFileName(name: string) {
@@ -75,8 +88,8 @@ export function useEvent() {
 	return {
 		file,
 		uploading,
-		upload,
-		remove,
-		moveFile,
+		upload: uploadTempImage,
+		remove: removeImage,
+		moveFile: moveImageFile,
 	};
 }
