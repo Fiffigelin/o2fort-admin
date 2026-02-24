@@ -1,6 +1,10 @@
 import { useEventsContext } from "../../../api/event-context";
 import { useImageStorage } from "../../../api/hooks/use-image-storage";
-import type { NewEvent, UploadEvent } from "../../../constant/types";
+import type {
+	NewEvent,
+	UploadedFile,
+	UploadEvent,
+} from "../../../constant/types";
 
 export function useCreateEvent() {
 	const imageHook = useImageStorage();
@@ -19,7 +23,14 @@ export function useCreateEvent() {
 		return await addEvent(newEvent);
 	};
 
+	async function deleteTempImage(image: UploadedFile) {
+		if (!image) return;
+
+		return await imageHook.remove(image);
+	}
+
 	return {
 		createNewEvent,
+		deleteTempImage,
 	};
 }

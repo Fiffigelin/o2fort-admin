@@ -7,7 +7,7 @@ import { useCreateEvent } from "./use-create-event";
 export default function CreateEvent() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { createNewEvent } = useCreateEvent();
+	const { createNewEvent, deleteTempImage } = useCreateEvent();
 
 	const state = location.state as { event: NewEvent };
 	const [event] = useState<NewEvent>(state.event);
@@ -18,12 +18,26 @@ export default function CreateEvent() {
 		try {
 			const result = await createNewEvent(event);
 
-			if (result) {
-				navigate("/home");
-			}
+			if (result) RouteHome();
 		} catch (err) {
 			console.error("Något gick fel vid skapandet:", err);
 		}
+	}
+
+	async function onAbort() {
+		if (!event.image) return;
+
+		try {
+			const result = await deleteTempImage(event.image);
+
+			if (result) RouteHome();
+		} catch (err) {
+			console.error("Något gick fel:", err);
+		}
+	}
+
+	function RouteHome() {
+		navigate("/home");
 	}
 
 	return (
@@ -35,7 +49,7 @@ export default function CreateEvent() {
 					className="object-cover"
 				/>
 			</div>
-			<EventForm initialEvent={event} onSubmit={onSubmit} />
+			<EventForm initialEvent={event} onSubmit={onSubmit} onAbort={onAbort} />
 		</div>
 	);
 }

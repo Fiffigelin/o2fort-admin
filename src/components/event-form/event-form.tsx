@@ -8,9 +8,14 @@ import { createDuration, createStartDate } from "../../utils/time-handler";
 interface EventFormProps {
 	initialEvent: NewEvent;
 	onSubmit: (event: NewEvent) => void;
+	onAbort: () => void;
 }
 
-export default function EventForm({ initialEvent, onSubmit }: EventFormProps) {
+export default function EventForm({
+	initialEvent,
+	onSubmit,
+	onAbort,
+}: EventFormProps) {
 	const [title, setTitle] = useState<string>(initialEvent.title);
 	const [date, setDate] = useState<Date>();
 	const [start, setStartTime] = useState<Time | null>({ hour: 11, minute: 0 });
@@ -76,13 +81,13 @@ export default function EventForm({ initialEvent, onSubmit }: EventFormProps) {
 				onChange={handleTimeChange}
 			/>
 			<button
-				className="col-span-1 col-end-4 w-full p-3 text-3xl py-4 bg-(--color-yellow) text-white rounded-md font-bold cursor-pointer transition-all duration-300 hover:bg-(--color-yellow) hover:-translate-y-0.5 active:translate-y-0 disabled:pointer-events-none"
-				onClick={handleSubmit}
+				className="col-span-1 col-end-4 w-full p-3 text-3xl py-4 bg-(--color-yellow)/80 text-white rounded-md font-bold cursor-pointer transition-all duration-300 hover:bg-(--color-yellow) hover:-translate-y-0.5 active:translate-y-0 disabled:pointer-events-none"
+				onClick={onAbort}
 			>
 				Avbryt
 			</button>
 			<button
-				className="col-span-1 col-end-5 w-full p-3 text-3xl py-4 bg-(--color-yellow) text-white rounded-md font-bold cursor-pointer transition-all duration-300 hover:bg-(--color-yellow) hover:-translate-y-0.5 active:translate-y-0 disabled:pointer-events-none"
+				className="col-span-1 col-end-5 w-full p-3 text-3xl py-4 bg-(--color-yellow)/80 text-white rounded-md font-bold cursor-pointer transition-all duration-300 hover:bg-(--color-yellow) hover:-translate-y-0.5 active:translate-y-0 disabled:pointer-events-none"
 				onClick={handleSubmit}
 			>
 				Spara
