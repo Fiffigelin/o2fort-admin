@@ -4,6 +4,8 @@ import { useImageStorage } from "../../api/hooks/use-image-storage";
 import type { UploadedFile } from "../../constant/types";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
 
+const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
 export type DragDropProps = {
 	onChange: (file: UploadedFile) => void;
 };
@@ -18,6 +20,11 @@ export default function DragDrop({ onChange }: DragDropProps) {
 
 		const file = files[0];
 		if (!file) return;
+
+		if (file.size > MAX_FILE_SIZE) {
+			alert("Filen är för stor! Max 2MB tillåtet.");
+			return;
+		}
 
 		try {
 			const uploaded = await upload(file);
