@@ -51,6 +51,7 @@ function Login({
 		>
 			{status && status.id === "login" && status.type === "error" && (
 				<FormInfo
+					key={"info"}
 					message={status.message}
 					onClose={clearStatus}
 					status={status.type}
