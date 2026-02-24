@@ -25,7 +25,7 @@ export default function PrivateLayout() {
 	return (
 		<div className="w-full h-screen overflow-hidden flex flex-row">
 			<Sidebar sidebarItems={navItems} />
-			<section className="w-full p-10">
+			<section className="w-full p-10 flex justify-center">
 				<Outlet />
 			</section>
 		</div>
