@@ -37,12 +37,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [status, setStatus] = useState<AuthStatus | null>(null);
 
 	useEffect(() => {
-		// Hämta session vid mount
 		supabase.auth.getSession().then(({ data }) => {
 			setUser(data?.session?.user ?? null);
 		});
 
-		// Lyssna på auth changes
 		const { data: listener } = supabase.auth.onAuthStateChange(
 			(_event, session) => {
 				setUser(session?.user ?? null);
