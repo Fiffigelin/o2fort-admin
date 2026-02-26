@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { NewEvent, UploadedFile } from "../../../constant/types";
 import { useHome } from "./use-home";
 import LoadingSpinner from "../../../components/loading-spinner/loading-spinner";
+import { EventGrid } from "../../../components/ag-grid/event-grid";
 
 function Home() {
 	const navigate = useNavigate();
@@ -27,7 +28,7 @@ function Home() {
 	}
 
 	return (
-		<div className="flex flex-col items-center h-full w-full">
+		<div className="flex flex-col items-center h-screen w-full">
 			<div className="flex flex-col justify-center md:flex-row md:justify-between w-full">
 				<div className="flex-col w-1/2 h-150 bg-blue-200 flex justify-center items-center">
 					<p>Senaste uppladdade bilden här med datum och bild</p>
@@ -38,20 +39,24 @@ function Home() {
 					<DragDrop onChange={(value) => handleImageUpload(value)} />
 				</div>
 			</div>
-			<div className="w-full h-150 overflow-y-scroll no-scrollbar bg-blue-400">
+			{/* <div className="w-full flex-1 overflow-y-scroll no-scrollbar bg-blue-400"> */}
+			<div className="w-full flex-1 bg-blue-400 mb-20">
 				{loadingUpcoming ? (
 					<div className="flex justify-center items-center h-full">
 						<LoadingSpinner size={24} />
 					</div>
 				) : (
-					<ul className="w-full flex flex-col p-12">
-						{upcomingEvents.map((event, index) => (
-							<li key={index} className="flex gap-4">
-								<p>{event.title}</p>
-								<p>{event.start_at.toString()}</p>
-							</li>
-						))}
-					</ul>
+					<>
+						{/* <ul className="w-full flex flex-col p-12">
+							{upcomingEvents.map((event, index) => (
+								<li key={index} className="flex gap-4">
+									<p>{event.title}</p>
+									<p>{event.start_at.toString()}</p>
+								</li>
+							))}
+						</ul> */}
+						<EventGrid data={upcomingEvents} />
+					</>
 				)}
 			</div>
 		</div>

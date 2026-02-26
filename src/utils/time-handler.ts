@@ -28,3 +28,33 @@ export function createDuration(
 
 	return durationMinutes;
 }
+
+export function formatTimeSE(date: Date | null | undefined): string {
+	if (!date) return "";
+
+	return new Intl.DateTimeFormat("sv-SE", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+		timeZone: "Europe/Stockholm",
+	}).format(date);
+}
+
+export function formatDateSE(date: Date | null | undefined): string {
+	if (!date) return "";
+	return new Intl.DateTimeFormat("sv-SE", {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		timeZone: "Europe/Stockholm",
+	}).format(date);
+}
+
+export function calculateEndTimeSE(
+	start: Date | null | undefined,
+	durationMinutes?: number,
+): Date | null {
+	if (!start || !durationMinutes) return null;
+
+	return new Date(start.getTime() + durationMinutes * 60000);
+}
