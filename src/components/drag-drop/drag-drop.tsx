@@ -62,10 +62,10 @@ export default function DragDrop({ onChange }: DragDropProps) {
 			}}
 			onDragLeave={() => setDragging(false)}
 			onDrop={handleDrop}
-			className="bg-gray-50 rounded-sm h-11/12 p-8 flex flex-col items-center justify-center cursor-pointer"
+			className="bg-gray-50 border border-[#181d1f]/15 rounded-md h-11/12 p-8 flex flex-col items-center justify-center cursor-pointer"
 		>
 			{uploading ? (
-				<div className="bg-white/70 flex flex-col items-center justify-center z-20">
+				<div className="bg-white flex flex-col items-center justify-center z-20">
 					<LoadingSpinner size={16} />
 					<p className="text-sm mt-3 text-blue-500">Laddar upp...</p>
 				</div>
