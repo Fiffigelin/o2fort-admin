@@ -62,7 +62,7 @@ export default function DragDrop({ onChange }: DragDropProps) {
 			}}
 			onDragLeave={() => setDragging(false)}
 			onDrop={handleDrop}
-			className="bg-gray-50 rounded-sm w-11/12 h-11/12 p-8 flex flex-col items-center justify-center cursor-pointer"
+			className="bg-gray-50 rounded-sm h-11/12 p-8 flex flex-col items-center justify-center cursor-pointer"
 		>
 			{uploading ? (
 				<div className="bg-white/70 flex flex-col items-center justify-center z-20">
@@ -86,6 +86,9 @@ export default function DragDrop({ onChange }: DragDropProps) {
 							<p className="text-gray-500 text-xl">
 								<span className="text-blue-500">Tryck för att ladda upp</span>{" "}
 								eller dra och släpp
+							</p>
+							<p className="text-xl text-gray-500">
+								för att skapa ett nytt evenemang
 							</p>
 							<p className="text-base text-gray-400 mt-1">PNG, JPG och JPEG</p>
 						</div>
