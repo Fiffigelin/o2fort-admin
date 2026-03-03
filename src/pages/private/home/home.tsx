@@ -28,38 +28,23 @@ function Home() {
 	}
 
 	return (
-		<div className="flex flex-col items-center h-screen w-full">
-			<div className="flex flex-col justify-center md:flex-row md:justify-between w-full">
-				<div className="flex-col w-1/2 h-150 bg-blue-200 flex justify-center items-center">
-					<p>Senaste uppladdade bilden här med datum och bild</p>
-					<p>ELLER</p>
-					<p>En kortare introduktion vad hur och varför :)</p>
-				</div>
-				<div className="w-1/2 bg-blue-300 flex justify-center items-center">
-					<DragDrop onChange={(value) => handleImageUpload(value)} />
-				</div>
+		<section className="flex flex-col w-full max-w-7xl">
+			<div className="flex-col w-full h-1/2 flex mt-12">
+				<h2 className="text-3xl font-bold">Skapa nytt evengemang</h2>
+				<DragDrop onChange={(value) => handleImageUpload(value)} />
 			</div>
-			{/* <div className="w-full flex-1 overflow-y-scroll no-scrollbar bg-blue-400"> */}
-			<div className="w-full flex-1 bg-blue-400 mb-20">
+
+			<div className="w-full flex-1 h-1/5 my-12">
+				<h2 className="text-3xl font-bold">Kommande evengemang</h2>
 				{loadingUpcoming ? (
 					<div className="flex justify-center items-center h-full">
 						<LoadingSpinner size={24} />
 					</div>
 				) : (
-					<>
-						{/* <ul className="w-full flex flex-col p-12">
-							{upcomingEvents.map((event, index) => (
-								<li key={index} className="flex gap-4">
-									<p>{event.title}</p>
-									<p>{event.start_at.toString()}</p>
-								</li>
-							))}
-						</ul> */}
-						<EventGrid data={upcomingEvents} />
-					</>
+					<EventGrid data={upcomingEvents} />
 				)}
 			</div>
-		</div>
+		</section>
 	);
 }
 

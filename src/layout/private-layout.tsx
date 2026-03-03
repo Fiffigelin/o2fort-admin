@@ -17,17 +17,18 @@ export default function PrivateLayout() {
 		{
 			label: "Evenemang",
 			icon: <MdOutlineEventAvailable />,
-			to: "/evenemang",
+			to: "/event",
 		},
 		{ label: "Wiki", icon: <TbVocabulary />, to: "/wiki" },
 	];
 
 	return (
-		<div className="w-full h-screen overflow-hidden flex flex-row">
+		<div className="w-screen h-screen flex flex-col md:flex-row">
 			<Sidebar sidebarItems={navItems} />
-			<section className="w-full p-10 flex justify-center">
+			{/* <div className="flex justify-center w-full mt-30 container mx-auto max-w-7xl lg:mt-10"> */}
+			<main className="flex justify-center h-screen overflow-auto w-full">
 				<Outlet />
-			</section>
+			</main>
 		</div>
 	);
 }
