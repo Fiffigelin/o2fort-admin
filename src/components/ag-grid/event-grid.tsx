@@ -8,6 +8,9 @@ import {
 	formatTimeSE,
 	calculateEndTimeSE,
 } from "../../utils/time-handler";
+import { ActionCellRenderer } from "./action-cellrenderer";
+
+import "./event-grid.css";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -16,36 +19,54 @@ type EventGridProps = {
 };
 
 export function EventGrid({ data }: EventGridProps) {
+	const handleEdit = (data: EventModel) => {
+		console.log("Ändra data: ", data);
+	};
+
+	const handleDelete = (data: EventModel) => {
+		console.log("Ta bort data: ", data);
+	};
+
 	const colDefs: ColDef<EventModel>[] = [
-		{ field: "id", headerName: "ID" },
-		{ field: "title", headerName: "Titel" },
 		{
 			headerName: "Datum",
-			field: "start_at",
-			valueFormatter: (params) => formatDateSE(params.value),
+			valueGetter: (params) => formatDateSE(params.data!.start_at),
 		},
 		{
-			headerName: "Starttid",
-			field: "start_at",
-			valueFormatter: (params) => formatTimeSE(params.value),
+			field: "title",
+			headerName: "Titel",
+			flex: 1,
 		},
 		{
-			headerName: "Sluttid",
-			valueGetter: (params) =>
-				calculateEndTimeSE(
+			headerName: "Tid",
+			valueGetter: (params) => {
+				const start = params.data!.start_at;
+				const end = calculateEndTimeSE(
 					params.data!.start_at,
 					params.data!.duration_minutes,
-				),
-			valueFormatter: (params) => formatTimeSE(params.value),
+				);
+
+				return { start, end };
+			},
+			valueFormatter: (params) => {
+				const { start, end } = params.value;
+				return `${formatTimeSE(start)}–${formatTimeSE(end)}`;
+			},
 		},
 		{
-			field: "duration_minutes",
-			headerName: "Varaktighet (min)",
+			headerName: "",
+			cellRenderer: ActionCellRenderer,
+			cellClass: "no-active-color",
+			cellRendererParams: {
+				onEdit: handleEdit,
+				onDelete: handleDelete,
+				suppressMouseEventHandling: () => true,
+			},
 		},
 	];
 
 	return (
-		<div className="ag-theme-quartz w-full h-full min-h-100">
+		<div className="ag-theme-quartz h-full min-h-100 overflow-y-scroll no-scrollbar">
 			<AgGridReact rowData={data} columnDefs={colDefs} />
 		</div>
 	);

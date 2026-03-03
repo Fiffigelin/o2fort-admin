@@ -1,0 +1,21 @@
+.ag-theme-quartz .ag-body-viewport,
+.ag-theme-quartz .ag-center-cols-clipper,
+.ag-body-vertical-scroll-viewport {
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.ag-theme-quartz .ag-body-viewport::-webkit-scrollbar {
+	display: none;
+}
+
+.ag-theme-quartz .no-active-color {
+	--ag-active-color: transparent;
+}
+
+.ag-header {
+	font-size: 1.8em;
+}
+.ag-cell {
+	font-size: 1.4em;
+}
