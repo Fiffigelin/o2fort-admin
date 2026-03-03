@@ -57,12 +57,17 @@ export type NavbarItem = {
 	subItems?: NavbarItem[];
 };
 
-export function SidebarItem({ item }: { item: NavbarItem }) {
+type NavbarItemProps = {
+	item: NavbarItem;
+	onClick?: () => void;
+};
+
+export function SidebarItem({ item, onClick }: NavbarItemProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const hasSubItems = !!item.subItems?.length;
 
 	return (
-		<div>
+		<div onClick={onClick}>
 			<div
 				className="
           flex items-center gap-6 p-5

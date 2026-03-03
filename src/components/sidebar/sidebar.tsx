@@ -1,89 +1,10 @@
-// import { useState } from "react";
-// import { FiLogOut, FiMenu } from "react-icons/fi";
-// import { SidebarItem } from "./sidebar-item";
-// import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../../api/auth-context";
-// import Logo from "/src/assets/logo.png";
-
-// export type SidebarItem = {
-// 	label: string;
-// 	icon?: React.ReactNode;
-// 	goTo?: string;
-// 	children?: SidebarItem[];
-// };
-
-// export type NavItem = {
-// 	sidebarItems?: SidebarItem[];
-// };
-
-// export default function Sidebar({ sidebarItems }: NavItem) {
-// 	const { logout } = useAuth();
-// 	const [collapsed, setCollapsed] = useState<boolean>(window.innerWidth < 768);
-// 	const navigate = useNavigate();
-
-// 	const LOGOUT: SidebarItem = {
-// 		label: "Logga ut",
-// 		icon: <FiLogOut size={24} />,
-// 		goTo: "",
-// 	};
-
-// 	const handleToggle = () => {
-// 		setCollapsed((prev) => !prev);
-// 	};
-
-// 	const handleLogout = () => {
-// 		logout();
-// 		navigate("/", { replace: true });
-// 	};
-
-// 	return (
-// 		<aside
-// 			className={`flex flex-col text-2xl bg-gray-50 shadow-lg text-(--color-text-primary) h-screen transition-[width] duration-500 ease-in-out ${
-// 				collapsed ? "w-20" : "w-sm"
-// 			}`}
-// 		>
-// 			{/* Logo + Toggle */}
-// 			<div
-// 				className={`flex p-4
-//           ${collapsed ? "justify-center" : "justify-between"}`}
-// 			>
-// 				{!collapsed && (
-// 					<div className="flex w-18 items-center gap-2 font-bold transition-opacity duration-500 ease-in-out">
-// 						<img src={Logo} alt="Oscar II Fort Logo" />
-// 					</div>
-// 				)}
-// 				<button
-// 					onClick={handleToggle}
-// 					aria-label="Toggle menu"
-// 					className="text-(--color-text-primary) hover:text-white text-2xl p-1 focus:outline-none transition-colors duration-200 cursor-pointer"
-// 				>
-// 					<FiMenu size={26} />
-// 				</button>
-// 			</div>
-
-// 			{/* Sidebar Items */}
-// 			<div className="flex flex-col flex-1 overflow-hidden">
-// 				<ul className="flex-1 flex flex-col gap-1 overflow-hidden">
-// 					{sidebarItems?.map((item, index) => (
-// 						<SidebarItem key={index} item={item} collapsed={collapsed} />
-// 					))}
-// 				</ul>
-
-// 				<div
-// 					onClick={handleLogout}
-// 					className="border-t border-neutral-400 cursor-pointer"
-// 				>
-// 					<SidebarItem item={LOGOUT} collapsed={collapsed} />
-// 				</div>
-// 			</div>
-// 		</aside>
-// 	);
-// }
-
 import { useNavigate } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
 import { SidebarItem, type NavbarItem } from "./sidebar-item";
 import { useAuth } from "../../api/auth-context";
+import { RiCloseLargeLine, RiMenuLine } from "react-icons/ri";
+import { useState } from "react";
+import { motion } from "motion/react";
 
 export type NavItem = {
 	sidebarItems?: NavbarItem[];
@@ -92,11 +13,16 @@ export type NavItem = {
 export default function Sidebar({ sidebarItems }: NavItem) {
 	const { logout } = useAuth();
 	const navigate = useNavigate();
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	const LOGOUT: NavbarItem = {
 		label: "Logga ut",
 		icon: <FiLogOut size={24} />,
 		to: "",
+	};
+
+	const handleOnClikc = () => {
+		setIsOpen((prev) => !prev);
 	};
 
 	const handleLogout = () => {
@@ -105,24 +31,76 @@ export default function Sidebar({ sidebarItems }: NavItem) {
 	};
 
 	return (
-		<aside className="flex flex-col text-2xl w-105 bg-(--color-sidebar) shadow-lg">
-			<a href="/" className="flex justify-center py-8">
-				<img className="" src="src/assets/logo.png" alt="logo" />
-			</a>
+		<>
+			{/* DESKTOP */}
+			<aside className="hidden lg:flex flex-col sticky h-full w-105 bg-(--color-sidebar) shadow-lg text-2xl">
+				<a href="/" className="flex justify-center py-8">
+					<img className="" src="src/assets/logo.png" alt="logo" />
+				</a>
 
-			<div className="h-full flex flex-col justify-between pt-4">
-				<nav>
-					{sidebarItems?.map((item, index) => (
-						<SidebarItem key={item.label || index} item={item} />
-					))}
-				</nav>
-				<div
-					onClick={handleLogout}
-					className="border-t border-(--color-border) cursor-pointer"
-				>
-					<SidebarItem item={LOGOUT} />
+				<div className="h-full flex flex-col justify-between pt-4">
+					<nav>
+						{sidebarItems?.map((item, index) => (
+							<SidebarItem key={item.label || index} item={item} />
+						))}
+					</nav>
+					<div
+						onClick={handleLogout}
+						className="border-t border-(--color-border) cursor-pointer"
+					>
+						<SidebarItem item={LOGOUT} />
+					</div>
 				</div>
+			</aside>
+
+			{/* MOBIL */}
+			<div className="flex flex-col lg:hidden w-screen fixed inset-x-0 z-9999 bg-(--color-sidebar) text-xl md:text-2xl">
+				<div className="flex items-center justify-between p-3 md:px-12 md:py-4">
+					<a href="/home" className="flex justify-center">
+						<img
+							className="h-18 md:h-28 lg:h-46.25"
+							src="src/assets/logo.png"
+							alt="logo"
+						/>
+					</a>
+					<button
+						className="flex cursor-pointer focus:outline-none"
+						onClick={() => setIsOpen((prev) => !prev)}
+					>
+						{isOpen ? (
+							<RiCloseLargeLine className="w-6 h-6 text-(--color-text-secondary)" />
+						) : (
+							<RiMenuLine className="w-6 h-6 text-(--color-text-secondary)" />
+						)}
+					</button>
+				</div>
+
+				{isOpen && (
+					<motion.div
+						className="block overflow-hidden text-center"
+						initial={{ opacity: 0, x: -10 }}
+						animate={{ opacity: 1, x: 0 }}
+						style={{ maxHeight: "100vh" }}
+						transition={{ duration: 1 }}
+					>
+						<nav className="">
+							{sidebarItems?.map((item, index) => (
+								<SidebarItem
+									key={item.label || index}
+									item={item}
+									onClick={handleOnClikc}
+								/>
+							))}
+							<div
+								onClick={handleLogout}
+								className="border-t border-(--color-border) cursor-pointer"
+							>
+								<SidebarItem item={LOGOUT} />
+							</div>
+						</nav>
+					</motion.div>
+				)}
 			</div>
-		</aside>
+		</>
 	);
 }
