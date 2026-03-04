@@ -28,7 +28,7 @@ function Home() {
 	}
 
 	return (
-		<section className="flex flex-col w-full max-w-7xl">
+		<section className="flex flex-col w-full max-w-7xl p-8">
 			<div className="flex-col w-full h-1/2 flex mt-12">
 				<h2 className="text-3xl font-bold">Skapa nytt evengemang</h2>
 				<DragDrop onChange={(value) => handleImageUpload(value)} />
