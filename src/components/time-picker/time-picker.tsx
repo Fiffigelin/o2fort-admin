@@ -54,8 +54,8 @@ export default function TimePicker({
 				{title}
 			</label>
 
-			<div className="flex items-center bg-white h-12 border border-gray-500/30 rounded pl-2 w-full">
-				<IoMdTime className="p-2 text-gray-700/90" size={38} />
+			<div className="flex items-center bg-white h-12 border border-gray-500/30 rounded px-4 w-full">
+				<IoMdTime className=" text-gray-700/90" size={32} />
 
 				{/* HOURS */}
 				<div className="relative w-1/2">
@@ -64,7 +64,7 @@ export default function TimePicker({
 						value={format(hour)}
 						placeholder="HH"
 						onClick={() => setOpen("hour")}
-						className="w-full px-2 text-lg h-full outline-none cursor-pointer bg-transparent text-center"
+						className="w-full px-2 text-xl h-full outline-none cursor-pointer bg-transparent text-center"
 					/>
 					{open === "hour" && (
 						<div className="absolute mt-2 left-0 w-full bg-white shadow rounded z-20 max-h-60 overflow-y-scroll no-scrollbar">
@@ -72,7 +72,7 @@ export default function TimePicker({
 								<div
 									key={i}
 									onClick={() => selectHour(i)}
-									className="p-2 hover:bg-gray-100 cursor-pointer text-center"
+									className="p-2 text-lg hover:bg-gray-100 cursor-pointer text-center"
 								>
 									{String(i).padStart(2, "0")}
 								</div>
@@ -97,7 +97,7 @@ export default function TimePicker({
 								<div
 									key={m}
 									onClick={() => selectMinute(m)}
-									className="p-2 hover:bg-gray-100 cursor-pointer"
+									className="p-2 text-lg hover:bg-gray-100 cursor-pointer"
 								>
 									{String(m).padStart(2, "0")}
 								</div>

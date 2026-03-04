@@ -171,17 +171,17 @@ export default function Datepicker({
 			</label>
 
 			<div
-				className={`flex items-center text-sm bg-white h-12 border border-gray-500/30 rounded pl-2 w-full ${showDatepicker && "focus-within:ring-1 focus-within:ring-(--color-yellow)"}`}
+				className={`flex items-center text-sm bg-white h-12 border border-gray-500/30 rounded px-4 gap-5 w-full ${showDatepicker && "focus-within:ring-1 focus-within:ring-(--color-yellow)"}`}
 				onClick={handleDatePicker}
 			>
-				<BsCalendar3 className="p-2 text-gray-700/90" size={38} />
+				<BsCalendar3 className=" text-gray-700/90" size={24} />
 				<input
 					ref={dateInputRef}
 					type="text"
 					value={datepickerValue}
 					readOnly
 					placeholder="Välj eventets datum"
-					className="px-2 w-full text-lg h-full outline-none text-gray-500 bg-transparent cursor-pointer"
+					className="text-xl h-full outline-none text-gray-500 bg-transparent cursor-pointer"
 					onKeyDown={(e) => e.key === "Escape" && setShowDatepicker(false)}
 				/>
 			</div>
@@ -189,13 +189,11 @@ export default function Datepicker({
 			{showDatepicker && (
 				<div className="bg-white rounded shadow p-4 absolute top-full left-0 w-full z-10">
 					<div className="flex justify-between items-center mb-2">
-						<div>
-							<span className="text-lg font-bold text-gray-800">
+						<div className="flex gap-3">
+							<p className="text-xl font-bold text-gray-800">
 								{MONTH_NAMES[month]}
-							</span>
-							<span className="ml-1 text-lg text-gray-600 font-normal">
-								{year}
-							</span>
+							</p>
+							<p className="ml-1 text-xl text-gray-600 font-normal">{year}</p>
 						</div>
 						<div className="flex gap-2">
 							<button
@@ -240,7 +238,7 @@ export default function Datepicker({
 					<div className="flex flex-wrap mb-3 -mx-1">
 						{DAYS.map((day, i) => (
 							<div key={i} style={{ width: "14.26%" }} className="px-0.5">
-								<div className="text-gray-800 font-medium text-center text-xs">
+								<div className="text-gray-800 font-medium text-center text-lg">
 									{day}
 								</div>
 							</div>
@@ -259,7 +257,7 @@ export default function Datepicker({
 							<div key={i} style={{ width: "14.28%" }} className="px-1 mb-1">
 								<div
 									onClick={() => getDateValue(date)}
-									className={`cursor-pointer mx-auto flex items-center justify-center w-8 h-8 rounded-full text-sm transition ease-in-out duration-100 ${
+									className={`cursor-pointer mx-auto flex items-center justify-center w-8 h-8 rounded-full text-lg transition ease-in-out duration-100 ${
 										isToday(date)
 											? "bg-indigo-200"
 											: isSelectedDate(date)
