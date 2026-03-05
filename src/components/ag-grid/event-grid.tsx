@@ -65,9 +65,42 @@ export function EventGrid({ data }: EventGridProps) {
 		},
 	];
 
+	const mobileColDefs: ColDef<EventModel>[] = [
+		{
+			headerName: "Datum",
+			valueGetter: (params) => formatDateSE(params.data!.start_at),
+			maxWidth: 120,
+		},
+		{
+			field: "title",
+			headerName: "Titel",
+			minWidth: 120,
+		},
+		{
+			headerName: "",
+			maxWidth: 100,
+			cellRenderer: ActionCellRenderer,
+			cellClass: "no-active-color",
+			cellRendererParams: {
+				onEdit: handleEdit,
+				onDelete: handleDelete,
+				suppressMouseEventHandling: () => true,
+			},
+		},
+	];
+
 	return (
 		<div className="ag-theme-quartz h-full min-h-100 overflow-y-scroll no-scrollbar">
-			<AgGridReact rowData={data} columnDefs={colDefs} />
+			<AgGridReact
+				rowData={data}
+				columnDefs={mobileColDefs}
+				className="block md:hidden"
+			/>
+			<AgGridReact
+				rowData={data}
+				columnDefs={colDefs}
+				className="hidden lg:block"
+			/>
 		</div>
 	);
 }

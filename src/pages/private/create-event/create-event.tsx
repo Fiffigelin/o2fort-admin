@@ -41,8 +41,8 @@ export default function CreateEvent() {
 	}
 
 	return (
-		<div className="max-w-4xl w-full h-screen flex flex-col jusitfy-center">
-			<div className="h-1/2 w-full bg-red-500 flex justify-center">
+		<section className="mt-24 md:mt-38 max-w-4xl w-full h-screen flex flex-col p-4 lg:mt-0 lg:p-8">
+			<div className="w-full flex justify-center mb-8">
 				<img
 					src={event.image.url}
 					alt={event.image.name}
@@ -50,6 +50,6 @@ export default function CreateEvent() {
 				/>
 			</div>
 			<EventForm initialEvent={event} onSubmit={onSubmit} onAbort={onAbort} />
-		</div>
+		</section>
 	);
 }

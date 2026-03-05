@@ -27,7 +27,7 @@ function Login() {
 	}, [login, loginUser]);
 
 	return (
-		<section className="flex justify-center min-h-screen w-full">
+		<section className="flex mt-0 min-h-screen">
 			<AuthForm
 				loginUser={loginUser}
 				loading={loading}

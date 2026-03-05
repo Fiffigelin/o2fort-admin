@@ -58,3 +58,10 @@ export function calculateEndTimeSE(
 
 	return new Date(start.getTime() + durationMinutes * 60000);
 }
+
+export function isEndTimeAfterStartTime(start: Time, end: Time): boolean {
+	const startMinutes = start.hour * 60 + start.minute;
+	const endMinutes = end.hour * 60 + end.minute;
+
+	return endMinutes > startMinutes;
+}

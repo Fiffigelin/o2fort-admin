@@ -161,7 +161,7 @@ export default function Datepicker({
 	return (
 		<div
 			ref={datepickerRef}
-			className="mb-5 min-w-64 w-full max-w-120 box-content relative cursor-pointer group"
+			className="mb-5 min-w-64 w-full lg:max-w-120 box-content relative cursor-pointer group"
 		>
 			<label
 				htmlFor="datepicker"
@@ -190,10 +190,8 @@ export default function Datepicker({
 				<div className="bg-white rounded shadow p-4 absolute top-full left-0 w-full z-10">
 					<div className="flex justify-between items-center mb-2">
 						<div className="flex gap-3">
-							<p className="text-xl font-bold text-gray-800">
-								{MONTH_NAMES[month]}
-							</p>
-							<p className="ml-1 text-xl text-gray-600 font-normal">{year}</p>
+							<p className="font-bold text-gray-800">{MONTH_NAMES[month]}</p>
+							<p className="ml-1 text-gray-600 font-normal">{year}</p>
 						</div>
 						<div className="flex gap-2">
 							<button

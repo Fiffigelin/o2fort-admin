@@ -62,17 +62,17 @@ export default function DragDrop({ onChange }: DragDropProps) {
 			}}
 			onDragLeave={() => setDragging(false)}
 			onDrop={handleDrop}
-			className="bg-gray-50 border border-[#181d1f]/15 rounded-md h-11/12 p-8 flex flex-col items-center justify-center cursor-pointer"
+			className="bg-[#ffffff] border border-[#181d1f]/15 rounded-md h-11/12 p-4 lg:p-8 flex flex-col items-center justify-center cursor-pointer"
 		>
 			{uploading ? (
-				<div className="bg-white flex flex-col items-center justify-center z-20">
+				<div className="flex flex-col items-center justify-center z-20">
 					<LoadingSpinner size={16} />
-					<p className="text-sm mt-3 text-blue-500">Laddar upp...</p>
+					<p className="mt-3 text-blue-500">Laddar upp...</p>
 				</div>
 			) : (
 				<div className="w-full h-full">
 					<div
-						className={`flex items-center justify-center w-full h-full text-center border-2 rounded-sm p-18 ${
+						className={`flex items-center justify-center w-full h-full text-center border-2 rounded-sm ${
 							dragging
 								? "border-dashed border-blue-500 bg-blue-50"
 								: "border-dashed border-gray-300"
@@ -80,17 +80,21 @@ export default function DragDrop({ onChange }: DragDropProps) {
 					>
 						<div className="flex flex-col items-center">
 							<RiImageAiLine
-								className={`${dragging ? "text-blue-500" : "text-gray-500"} mb-2`}
-								size={32}
+								className={`${dragging ? "text-blue-500" : "text-gray-500"} mb-2 text-3xl xl:text-5xl`}
 							/>
-							<p className="text-gray-500 text-xl">
-								<span className="text-blue-500">Tryck för att ladda upp</span>{" "}
+
+							<p className="hidden lg:block text-gray-500">
+								<span className="text-blue-500">
+									Tryck för att ladda upp nytt evenemang
+								</span>{" "}
 								eller dra och släpp
 							</p>
-							<p className="text-xl text-gray-500">
-								för att skapa ett nytt evenemang
+
+							<p className="lg:hidden text-blue-500 flex flex-col">
+								Tryck för att ladda upp
+								<span>nytt evenemang</span>
 							</p>
-							<p className="text-base text-gray-400 mt-1">PNG, JPG och JPEG</p>
+							<p className=" text-gray-400 mt-1">PNG, JPG och JPEG</p>
 						</div>
 					</div>
 
