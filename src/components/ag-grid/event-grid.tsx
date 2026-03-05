@@ -30,15 +30,18 @@ export function EventGrid({ data }: EventGridProps) {
 	const colDefs: ColDef<EventModel>[] = [
 		{
 			headerName: "Datum",
+			suppressMovable: true,
 			valueGetter: (params) => formatDateSE(params.data!.start_at),
 		},
 		{
 			field: "title",
 			headerName: "Titel",
 			flex: 1,
+			suppressMovable: true,
 		},
 		{
 			headerName: "Tid",
+			suppressMovable: true,
 			valueGetter: (params) => {
 				const start = params.data!.start_at;
 				const end = calculateEndTimeSE(
@@ -55,6 +58,8 @@ export function EventGrid({ data }: EventGridProps) {
 		},
 		{
 			headerName: "",
+			suppressMovable: true,
+			maxWidth: 100,
 			cellRenderer: ActionCellRenderer,
 			cellClass: "no-active-color",
 			cellRendererParams: {
@@ -70,15 +75,18 @@ export function EventGrid({ data }: EventGridProps) {
 			headerName: "Datum",
 			valueGetter: (params) => formatDateSE(params.data!.start_at),
 			maxWidth: 120,
+			suppressMovable: true,
 		},
 		{
 			field: "title",
 			headerName: "Titel",
 			minWidth: 120,
+			suppressMovable: true,
 		},
 		{
 			headerName: "",
 			maxWidth: 100,
+			suppressMovable: true,
 			cellRenderer: ActionCellRenderer,
 			cellClass: "no-active-color",
 			cellRendererParams: {

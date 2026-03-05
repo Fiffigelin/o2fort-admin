@@ -12,15 +12,15 @@ type ActionCellRendererParams = ICellRendererParams<EventModel> & {
 export function ActionCellRenderer(params: ActionCellRendererParams) {
 	const { data, onEdit, onDelete } = params;
 	return (
-		<div className="flex justify-between items-center h-full text-[1em] lg:text-[1.3em] lg:gap-8">
+		<div className="flex justify-between items-center h-full text-[1em] lg:text-[1.3em]">
 			<button
-				className="hover:bg-[#2196f3] hover:text-white p-1.5 rounded-full"
+				className="hover:bg-[#2196f3] hover:text-white p-1.5 rounded-full cursor-pointer"
 				onClick={() => onEdit(data)}
 			>
 				<MdOutlineModeEditOutline />
 			</button>
 			<button
-				className="hover:bg-[#2196f3] hover:text-white p-1.5 rounded-full"
+				className="hover:bg-[#2196f3] hover:text-white p-1.5 rounded-full cursor-pointer"
 				onClick={() => onDelete(data)}
 			>
 				<RiDeleteBin6Line />
