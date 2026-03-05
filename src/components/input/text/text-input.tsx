@@ -7,6 +7,7 @@ type AuthProps = {
 	placeholder?: string;
 	onChange: (value: string) => void;
 	valid?: boolean;
+	errorMessage?: string;
 };
 
 function TextInput({
@@ -16,6 +17,7 @@ function TextInput({
 	placeholder = "",
 	onChange,
 	valid = true,
+	errorMessage = "",
 }: AuthProps) {
 	const [touched, setTouched] = useState(false);
 
@@ -48,8 +50,8 @@ function TextInput({
 				/>
 			</div>
 			<div className={`${valid && "mb-8"}`}>
-				{touched && !valid && type === "email" && (
-					<p className="text-red-600 ml-1">{"Fyll i en giltlig epost"}</p>
+				{touched && !valid && type === "email" && errorMessage.length > 0 && (
+					<p className="text-red-600 ml-1">{errorMessage}</p>
 				)}
 			</div>
 		</div>

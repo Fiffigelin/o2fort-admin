@@ -70,6 +70,7 @@ function Login({
 					label={"Email"}
 					type={"email"}
 					placeholder="Skriv din email"
+					errorMessage="Fyll i en korrekt email"
 				/>
 				<PasswordInput
 					value={user?.password}
