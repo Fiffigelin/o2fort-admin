@@ -14,8 +14,8 @@
 }
 
 .ag-header {
-	font-size: 1.8em;
+	font-size: clamp(1.15rem, 3vw, 1.5rem);
 }
 .ag-cell {
-	font-size: 1.4em;
+	font-size: clamp(1rem, 2.5vw, 1.25rem);
 }

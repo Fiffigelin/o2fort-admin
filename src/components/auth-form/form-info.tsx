@@ -23,7 +23,7 @@ function FormInfo({ message, status, onClose }: FormInfoProps) {
 			) : (
 				<BiSolidError size={24} className="text-red-800" />
 			)}
-			<p className={`font-semibold text-lg grow ${text}`}>{message}</p>
+			<p className={`font-semibold grow ${text}`}>{message}</p>
 			<MdClose
 				size={22}
 				className="cursor-pointer r-0 mr-1"

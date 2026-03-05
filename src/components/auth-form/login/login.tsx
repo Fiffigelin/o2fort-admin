@@ -79,7 +79,7 @@ function Login({
 			</div>
 
 			<a className="flex justify-end items-center mb-3" href="#">
-				<p className="text-xl text-gray-600 cursor-pointer hover:-translate-y-0.5">
+				<p className=" text-gray-600 cursor-pointer hover:-translate-y-0.5">
 					Glömt lösenord?
 				</p>
 			</a>
@@ -90,7 +90,7 @@ function Login({
 			<p className="text-center text-gray-600 text-xl mt-6">
 				Inget konto?{" "}
 				<button
-					className="text-xl cursor-pointer hover:-translate-y-0.5"
+					className="cursor-pointer hover:-translate-y-0.5"
 					onClick={(e) => {
 						e.preventDefault();
 						goTo("signup");

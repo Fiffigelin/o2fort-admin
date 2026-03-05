@@ -31,7 +31,7 @@ function AuthForm({
 				<div className="flex flex-col justify-center items-center rounded-t-xl bg-(--color-background) py-8">
 					<img src={Logo} alt="Oscar II Fort Logo" />
 					<h2
-						className="text-5xl font-bold text-center text-(--color-text-primary) mb-2"
+						className="font-bold text-center text-(--color-text-primary) mb-2"
 						style={{ fontFamily: "Capture, serif" }}
 					>
 						Oscar II Fort Admin
