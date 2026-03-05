@@ -6,6 +6,7 @@ import type { AuthStatus } from "../../../api/auth-context";
 import FormInfo from "../form-info";
 import TextInput from "../../input/text/text-input";
 import PasswordInput from "../../input/password/password-input";
+import { CustomButton } from "../../custom-button/custom-button";
 
 type LoginProps = {
 	user: LoginRequest | undefined;
@@ -43,7 +44,8 @@ function Login({
 	return (
 		<form
 			id={"auth"}
-			className="p-8 growDown relative"
+			className=" h-full p-8 growDown relative"
+			noValidate
 			onSubmit={(e) => {
 				e.preventDefault();
 				onSubmit();
@@ -58,7 +60,7 @@ function Login({
 				/>
 			)}
 
-			<div className="mb-4">
+			<div className="mb-8">
 				<TextInput
 					value={user?.email}
 					onChange={(value) => {
@@ -76,16 +78,14 @@ function Login({
 					}}
 					label={"Lösenord"}
 				/>
+				<a className="flex justify-end items-center mb-3" href="#">
+					<p className=" text-gray-600 cursor-pointer hover:-translate-y-0.5">
+						Glömt lösenord?
+					</p>
+				</a>
 			</div>
 
-			<a className="flex justify-end items-center mb-3" href="#">
-				<p className=" text-gray-600 cursor-pointer hover:-translate-y-0.5">
-					Glömt lösenord?
-				</p>
-			</a>
-			<button className="w-full p-3 text-3xl py-4 bg-(--color-yellow) text-white rounded-md font-bold cursor-pointer transition-all duration-300 hover:bg-(--color-yellow) hover:-translate-y-0.5 active:translate-y-0 disabled:pointer-events-none">
-				LOGGA IN
-			</button>
+			<CustomButton title="LOGGA IN" type="submit" />
 
 			<p className="text-center text-gray-600 text-xl mt-6">
 				Inget konto?{" "}

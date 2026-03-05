@@ -60,7 +60,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 			});
 			if (error) {
 				setError(error.message);
-				setStatus({ type: "error", message: error.message, id: "login" });
+				setStatus({
+					type: "error",
+					message: "Felaktiga loginuppgifter. Var god försök igen.",
+					id: "login",
+				});
 				throw error;
 			}
 			setStatus({ type: "success", message: "Inloggad!", id: "login" });

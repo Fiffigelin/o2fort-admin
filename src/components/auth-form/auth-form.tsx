@@ -26,9 +26,9 @@ function AuthForm({
 	const [view, setView] = useState<AuthView>("login");
 
 	return (
-		<div className="w-2xl mx-auto mt-20">
-			<div className="relative w-full bg-white rounded-xl shadow-xl overflow-hidden">
-				<div className="flex flex-col justify-center items-center rounded-t-xl bg-(--color-background) py-8">
+		<div className="w-full md:w-2xl">
+			<div className="relative w-full h-full md:h-auto bg-white md:rounded-xl shadow-xl overflow-hidden">
+				<div className="flex flex-col justify-center items-center md:rounded-t-xl bg-(--color-background) py-8">
 					<img src={Logo} alt="Oscar II Fort Logo" />
 					<h2
 						className="font-bold text-center text-(--color-text-primary) mb-2"
