@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import type { LoginRequest } from "../../constant/types";
-import { useAuth } from "../../api/auth-context";
+import { useAuth } from "../../contexts/auth/auth-context";
 import AuthForm from "../../components/auth-form/auth-form";
 
 function Login() {

@@ -1,32 +1,34 @@
-import { useEventsContext } from "../../../api/event-context";
-import { useImageStorage } from "../../../api/hooks/use-image-storage";
+import { useEventsContext } from "../../../contexts/event/event-context";
 import type {
+	EventModel,
 	NewEvent,
 	UploadedFile,
-	UploadEvent,
 } from "../../../constant/types";
+import { removeImage } from "../../../api/image-storage";
+import { useToastContext } from "../../../contexts/toast/toast-context";
 
 export function useCreateEvent() {
-	const imageHook = useImageStorage();
 	const { addEvent } = useEventsContext();
+	const { showToast } = useToastContext();
 
-	const createNewEvent = async (eventData: NewEvent) => {
-		const newPath = await imageHook.moveFile(eventData.image);
+	const createNewEvent = async (
+		eventData: NewEvent,
+	): Promise<EventModel | undefined> => {
+		try {
+			const result = await addEvent(eventData);
+			if (result) showToast("success", "Det lyckades att spara eventet!");
 
-		const newEvent: UploadEvent = {
-			title: eventData.title,
-			start_at: eventData.start_at,
-			duration_minutes: eventData.duration_minutes,
-			image: newPath,
-		};
-
-		return await addEvent(newEvent);
+			return result;
+		} catch (error: unknown) {
+			console.error("Failed to insert new event:", error);
+			showToast("success", "Kunde inte spara. Var god försök igen.");
+		}
 	};
 
 	async function deleteTempImage(image: UploadedFile) {
 		if (!image) return;
 
-		return await imageHook.remove(image);
+		return await removeImage(image);
 	}
 
 	return {

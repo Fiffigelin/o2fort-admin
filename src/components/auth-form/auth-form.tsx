@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { AuthStatus } from "../../api/auth-context";
+import type { AuthStatus } from "../../contexts/auth/auth-context";
 import type { LoginRequest } from "../../constant/types";
 import Login from "./login/login";
 import Logo from "/src/assets/logo.png";

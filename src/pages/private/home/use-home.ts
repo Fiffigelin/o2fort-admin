@@ -1,7 +1,8 @@
-import { useEventsContext } from "../../../api/event-context";
+import { useEventsContext } from "../../../contexts/event/event-context";
 
 export function useHome() {
-	const { upcomingEvents, loadingUpcoming } = useEventsContext();
+	const { upcomingEvents, loadingUpcomingEvents: loadingUpcoming } =
+		useEventsContext();
 
 	return {
 		upcomingEvents,

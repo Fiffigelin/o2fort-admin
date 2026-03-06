@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { isEmail } from "../../../utils/validation";
 import type { LoginRequest } from "../../../constant/types";
 import type { AuthView } from "../auth-form";
-import type { AuthStatus } from "../../../api/auth-context";
+import type { AuthStatus } from "../../../contexts/auth/auth-context";
 import FormInfo from "../form-info";
 import TextInput from "../../input/text/text-input";
 import PasswordInput from "../../input/password/password-input";

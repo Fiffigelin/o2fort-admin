@@ -9,12 +9,18 @@ import {
 	isEndTimeAfterStartTime,
 } from "../../utils/time-handler";
 import { CustomButton } from "../custom-button/custom-button";
+import FormInfo from "../auth-form/form-info";
 
-interface EventFormProps {
+type EventFormProps = {
 	initialEvent: NewEvent;
 	onSubmit: (event: NewEvent) => void;
 	onAbort: () => void;
-}
+};
+
+type ValidType = {
+	title: boolean;
+	date: boolean;
+};
 
 export default function EventForm({
 	initialEvent,
@@ -25,6 +31,31 @@ export default function EventForm({
 	const [date, setDate] = useState<Date>();
 	const [start, setStartTime] = useState<Time | null>({ hour: 11, minute: 0 });
 	const [end, setEndTime] = useState<Time | null>({ hour: 17, minute: 0 });
+	const [showInfo, setShowInfo] = useState<boolean>(false);
+	const [isTypeValid, setIsTypeValid] = useState<ValidType>({
+		title: false,
+		date: false,
+	});
+
+	function handleCloseInfo() {
+		setShowInfo(false);
+	}
+
+	function handleTitleChange(value: string) {
+		setTitle(value);
+
+		if (value.length === 0 || value.trim().length > 2) {
+			setIsTypeValid((prev) => ({ ...prev, title: true }));
+		} else {
+			setIsTypeValid((prev) => ({ ...prev, title: false }));
+		}
+	}
+
+	function handleDateChange(value: Date) {
+		setDate(value);
+
+		setIsTypeValid((prev) => ({ ...prev, date: value ? true : false }));
+	}
 
 	function handleTimeChange(type: string, time: Time) {
 		if (time.hour === null || time.minute === null) {
@@ -37,8 +68,6 @@ export default function EventForm({
 
 	function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
-
-		if (!isValid) return;
 
 		if (date && start) {
 			initialEvent.start_at = createStartDate(date, start);
@@ -53,14 +82,20 @@ export default function EventForm({
 		}
 
 		initialEvent.title = title;
-		onSubmit(initialEvent);
+
+		if (isValid) {
+			onSubmit(initialEvent);
+		} else {
+			setShowInfo(true);
+		}
 	}
 
 	const isTimeValid =
 		start && end ? isEndTimeAfterStartTime(start, end) : false;
 
 	const isValid =
-		title.trim().length > 3 &&
+		isTypeValid.title &&
+		isTypeValid.date &&
 		!!date &&
 		!!start &&
 		!!end &&
@@ -70,18 +105,32 @@ export default function EventForm({
 	return (
 		<form
 			onSubmit={handleSubmit}
+			noValidate
 			className="grid grid-cols-4 w-full gap-3 pb-10 lg:gap-6"
 		>
+			{showInfo && (
+				<FormInfo
+					message="Evenemang behöver titel, datum och tid"
+					onClose={handleCloseInfo}
+					status={"error"}
+					className="col-span-4"
+				/>
+			)}
 			<div className="col-span-4">
 				<TextInput
 					key="title"
 					value={title}
 					label={"Titel"}
-					onChange={(value) => setTitle(value)}
+					onChange={(value) => handleTitleChange(value)}
+					valid={isTypeValid.title}
+					errorMessage="Behöver en titel på 3 tecken eller mer"
 				/>
 			</div>
 			<div className="col-span-4 md:col-span-2">
-				<Datepicker initialDate={date ?? new Date()} onChange={setDate} />
+				<Datepicker
+					initialDate={date ?? new Date()}
+					onChange={(value) => handleDateChange(value)}
+				/>
 			</div>
 			<TimePicker
 				title="Starttid"
@@ -100,7 +149,9 @@ export default function EventForm({
 				className="col-span-2 md:col-span-1"
 			/>
 			{!isTimeValid && (
-				<p className="col-span-2">Sluttiden måste vara efter starttiden</p>
+				<p className="col-span-2 text-red-500">
+					Sluttiden måste vara efter starttiden
+				</p>
 			)}
 			<CustomButton
 				className="col-span-2 md:col-end-4 md:col-span-1"
@@ -113,7 +164,6 @@ export default function EventForm({
 				variant="primary"
 				type="submit"
 				title={"Spara"}
-				disabled={!isValid}
 			/>
 		</form>
 	);

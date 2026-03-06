@@ -14,14 +14,9 @@ export default function CreateEvent() {
 
 	async function onSubmit(event: NewEvent) {
 		if (!event) return;
+		const result = await createNewEvent(event);
 
-		try {
-			const result = await createNewEvent(event);
-
-			if (result) RouteHome();
-		} catch (err) {
-			console.error("Något gick fel vid skapandet:", err);
-		}
+		if (result) RouteHome();
 	}
 
 	async function onAbort() {

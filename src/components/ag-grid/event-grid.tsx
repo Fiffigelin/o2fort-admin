@@ -74,13 +74,12 @@ export function EventGrid({ data }: EventGridProps) {
 		{
 			headerName: "Datum",
 			valueGetter: (params) => formatDateSE(params.data!.start_at),
-			maxWidth: 120,
 			suppressMovable: true,
 		},
 		{
 			field: "title",
 			headerName: "Titel",
-			minWidth: 120,
+			flex: 1,
 			suppressMovable: true,
 		},
 		{
@@ -102,12 +101,12 @@ export function EventGrid({ data }: EventGridProps) {
 			<AgGridReact
 				rowData={data}
 				columnDefs={mobileColDefs}
-				className="block md:hidden"
+				className="block xl:hidden"
 			/>
 			<AgGridReact
 				rowData={data}
 				columnDefs={colDefs}
-				className="hidden lg:block"
+				className="hidden xl:block"
 			/>
 		</div>
 	);

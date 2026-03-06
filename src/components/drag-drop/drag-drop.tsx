@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { RiImageAiLine } from "react-icons/ri";
-import { useImageStorage } from "../../api/hooks/use-image-storage";
 import type { UploadedFile } from "../../constant/types";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
+import { useEventsContext } from "../../contexts/event/event-context";
+import { useToastContext } from "../../contexts/toast/toast-context";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
@@ -11,9 +12,10 @@ export type DragDropProps = {
 };
 
 export default function DragDrop({ onChange }: DragDropProps) {
-	const { uploading, upload } = useImageStorage();
-	const inputRef = useRef<HTMLInputElement>(null);
+	const { loadingImage, uploadEventImage } = useEventsContext();
+	const { showToast } = useToastContext();
 	const [dragging, setDragging] = useState(false);
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	const handleUpload = async (files: FileList | File[]) => {
 		if (!files || files.length === 0) return;
@@ -22,16 +24,18 @@ export default function DragDrop({ onChange }: DragDropProps) {
 		if (!file) return;
 
 		if (file.size > MAX_FILE_SIZE) {
-			alert("Filen är för stor! Max 2MB tillåtet.");
+			showToast("error", "Filen är för stor! Max 2MB tillåtet.");
 			return;
 		}
 
 		try {
-			const uploaded = await upload(file);
-			onChange(uploaded);
-		} catch (err) {
-			console.error(err);
-			alert("Upload misslyckades");
+			const result = await uploadEventImage(file);
+			if (result) {
+				onChange(result);
+			}
+		} catch (error: unknown) {
+			console.error("Kunde inte ladda upp bild: ", error);
+			showToast("error", "Något fel hände! Kunde inte ladda upp bilden");
 		} finally {
 			if (inputRef.current) inputRef.current.value = "";
 		}
@@ -64,7 +68,7 @@ export default function DragDrop({ onChange }: DragDropProps) {
 			onDrop={handleDrop}
 			className="bg-[#ffffff] border border-[#181d1f]/15 rounded-md h-11/12 p-4 lg:p-8 flex flex-col items-center justify-center cursor-pointer"
 		>
-			{uploading ? (
+			{loadingImage ? (
 				<div className="flex flex-col items-center justify-center z-20">
 					<LoadingSpinner size={16} />
 					<p className="mt-3 text-blue-500">Laddar upp...</p>

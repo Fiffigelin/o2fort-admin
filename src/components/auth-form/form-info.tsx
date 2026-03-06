@@ -6,9 +6,10 @@ type FormInfoProps = {
 	message: string | undefined;
 	status: "error" | "success";
 	onClose: () => void;
+	className?: string;
 };
 
-function FormInfo({ message, status, onClose }: FormInfoProps) {
+function FormInfo({ message, status, onClose, className = "" }: FormInfoProps) {
 	const text = status === "success" ? "text-green-950" : "text-red-950";
 	const background =
 		status === "success"
@@ -16,7 +17,7 @@ function FormInfo({ message, status, onClose }: FormInfoProps) {
 			: "bg-red-300 border-red-800";
 	return (
 		<div
-			className={`flex ${background} border-l-4 mb-6 p-2 gap-3 items-center`}
+			className={`flex ${background} border-l-4 mb-6 p-2 gap-3 items-center ${className}`}
 		>
 			{status === "success" ? (
 				<LuPartyPopper size={24} className="text-green-800" />

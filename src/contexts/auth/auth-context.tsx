@@ -5,7 +5,7 @@ import {
 	useState,
 	type ReactNode,
 } from "react";
-import { supabase } from "./supabase-client";
+import { supabase } from "../../api/supabase-client";
 import type { User } from "@supabase/supabase-js";
 
 export type AuthStatus = {

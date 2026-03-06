@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FiLogOut } from "react-icons/fi";
 import { SidebarItem, type NavbarItem } from "./sidebar-item";
-import { useAuth } from "../../api/auth-context";
+import { useAuth } from "../../contexts/auth/auth-context";
 import { RiCloseLargeLine, RiMenuLine } from "react-icons/ri";
 import { useState } from "react";
 import { motion } from "motion/react";
@@ -54,11 +54,11 @@ export default function Sidebar({ sidebarItems }: NavItem) {
 			</aside>
 
 			{/* MOBIL */}
-			<div className="flex flex-col lg:hidden w-screen fixed inset-x-0 z-9999 bg-(--color-sidebar) text-xl md:text-2xl">
-				<div className="flex items-center justify-between p-3 md:px-12 md:py-4">
+			<div className="flex flex-col lg:hidden w-screen inset-x-0 z-9999 bg-(--color-sidebar) text-xl">
+				<div className="flex items-center justify-between py-4 px-12">
 					<a href="/home" className="flex justify-center">
 						<img
-							className="h-18 md:h-28 lg:h-46.25"
+							className="h-18 lg:h-46.25"
 							src="src/assets/logo.png"
 							alt="logo"
 						/>

@@ -24,6 +24,7 @@ start_at_utc: timestamptz
 - [x] En användare ska kunna skapa ett event
 - [ ] En användare ska kunna ändra ett event
 - [ ] En användare ska kunna radera ett event
+- [x] En användare ska kunna se kommande event
 
 # Hur ska flödet vara?
 - [x] En användare ska kunna ladda upp en bild
@@ -32,10 +33,12 @@ start_at_utc: timestamptz
 - [ ] Nya sidan:
 - - [x] Här ska användaren kunna skapa ett event och fylla i datum för eventet, titel och med den uppladdade bilden
 - - [x] Skapas ett event skickas bilden från /uploaded till /events och bilden på /uploaded raderas samt en refresh körs på GET och användaren skickas tillbaka till startsidan
-- - [ ] Skapas INTE ett event ska bilden raderas från /uploaded
-- - [ ] Händer inget på säg 15min ska ett script köras så att bilden raderas automatiskt??? Hmmm.... kommande feature?
+- - [ ] Hantera felaktiga inputs
+- - [ ] Knappen är inactive om inte alla valideringar === true
+- - [x] Skapas INTE ett event ska bilden raderas från /uploaded
 
 # Kommande features?
 - [ ] En användare ska kunna ladda upp fler bilder och skapa flera events samtidigt
 - [ ] Implementera AgGrid för snyggare visuell visning
 - [ ] Ta bort gamla efter att datumet passerat alternativt lägga undan eventet eller sätta en flagga på klassobjektet <== inte tänkt klart här
+- [ ] kolla hantering av nya users
