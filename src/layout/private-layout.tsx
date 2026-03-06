@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { MdOutlineEventAvailable, MdOutlineHome } from "react-icons/md";
 import { TbVocabulary } from "react-icons/tb";
 import type { NavbarItem } from "../components/sidebar/sidebar-item";
-import { ToastContainer } from "../components/banner/toast-container";
+import { Toast } from "../components/toast/toast-container";
 import { useToastContext } from "../contexts/toast/toast-context";
 import Sidebar from "../components/sidebar/sidebar";
 
@@ -23,7 +23,7 @@ export default function PrivateLayout() {
 		<div className="w-screen h-screen flex flex-col overflow-hidden lg:flex-row">
 			<Sidebar sidebarItems={navItems} />
 			<main className="flex-1 overflow-y-auto no-scrollbar">
-				<ToastContainer toasts={toasts} onClose={remove} />;
+				<Toast toasts={toasts} onClose={remove} />;
 				<div className="max-w-7xl mx-auto">
 					<Outlet />
 				</div>

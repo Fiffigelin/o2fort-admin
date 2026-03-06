@@ -49,7 +49,6 @@ export function ToastItem({ toast, onClose }: ToastProps) {
 				<MdOutlineClose size={24} />
 			</button>
 
-			{/* progress bar */}
 			<motion.div
 				initial={{ width: "100%" }}
 				animate={{ width: "0%" }}

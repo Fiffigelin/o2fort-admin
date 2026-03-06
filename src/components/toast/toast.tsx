@@ -7,7 +7,7 @@ type Props = {
 	onClose: (id: string) => void;
 };
 
-export function ToastContainer({ toasts, onClose }: Props) {
+export function Toast({ toasts, onClose }: Props) {
 	return (
 		<ul className="fixed right-1 top-32 lg:top-5 flex flex-col gap-3 z-50">
 			<AnimatePresence>
