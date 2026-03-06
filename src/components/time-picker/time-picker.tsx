@@ -5,7 +5,7 @@ import type { Time } from "../../constant/types";
 type TimePickerProps = {
 	title: string;
 	type: "start" | "end";
-	onChange: (type: string, time: Time) => void;
+	onChange: (time: Time) => void;
 	initiatedHour?: number;
 	initiatedMinutes?: number;
 	className?: string;
@@ -15,7 +15,6 @@ export default function TimePicker({
 	onChange,
 	initiatedHour,
 	initiatedMinutes,
-	type = "start",
 	className = "",
 }: TimePickerProps) {
 	const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -41,13 +40,13 @@ export default function TimePicker({
 	const selectHour = (h: number) => {
 		setHour(h);
 		setOpen("minute");
-		onChange(type, { hour: h, minute: minute });
+		onChange({ hour: h, minute: minute });
 	};
 
 	const selectMinute = (m: number) => {
 		setMinute(m);
 		setOpen(null);
-		onChange(type, { hour: hour, minute: m });
+		onChange({ hour: hour, minute: m });
 	};
 
 	return (

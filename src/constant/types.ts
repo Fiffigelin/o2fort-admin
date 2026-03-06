@@ -18,20 +18,27 @@ export type NewEvent = {
 	image: UploadedFile;
 };
 
+export interface UpdateEvent extends UploadEvent {
+	file: UploadedFile;
+	time: EventTime;
+}
+
 export type UploadEvent = {
+	id?: string;
 	title: string;
-	start_at: Date;
-	duration_minutes: number;
+	startAt: Date;
+	durationMinutes: number;
 	image: string;
+	createdAt?: Date;
 };
 
 export type EventModel = {
 	id: string;
 	title: string;
-	start_at: Date;
-	duration_minutes: number;
-	image_path: string;
-	created_at: Date;
+	startAt: Date;
+	durationMinutes: number;
+	imagePath: string;
+	createdAt: Date;
 };
 
 export type EventImage = {
@@ -42,4 +49,9 @@ export type EventImage = {
 export type Time = {
 	hour: number;
 	minute: number;
+};
+
+export type EventTime = {
+	start: Time;
+	end: Time;
 };

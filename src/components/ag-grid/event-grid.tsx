@@ -16,22 +16,16 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 type EventGridProps = {
 	data: EventModel[];
+	onUpdate: (event: EventModel) => void;
+	onDelete: (event: EventModel) => void;
 };
 
-export function EventGrid({ data }: EventGridProps) {
-	const handleEdit = (data: EventModel) => {
-		console.log("Ändra data: ", data);
-	};
-
-	const handleDelete = (data: EventModel) => {
-		console.log("Ta bort data: ", data);
-	};
-
+export function EventGrid({ data, onUpdate, onDelete }: EventGridProps) {
 	const colDefs: ColDef<EventModel>[] = [
 		{
 			headerName: "Datum",
 			suppressMovable: true,
-			valueGetter: (params) => formatDateSE(params.data!.start_at),
+			valueGetter: (params) => formatDateSE(params.data!.startAt),
 		},
 		{
 			field: "title",
@@ -43,10 +37,10 @@ export function EventGrid({ data }: EventGridProps) {
 			headerName: "Tid",
 			suppressMovable: true,
 			valueGetter: (params) => {
-				const start = params.data!.start_at;
+				const start = params.data!.startAt;
 				const end = calculateEndTimeSE(
-					params.data!.start_at,
-					params.data!.duration_minutes,
+					params.data!.startAt,
+					params.data!.durationMinutes,
 				);
 
 				return { start, end };
@@ -63,8 +57,8 @@ export function EventGrid({ data }: EventGridProps) {
 			cellRenderer: ActionCellRenderer,
 			cellClass: "no-active-color",
 			cellRendererParams: {
-				onEdit: handleEdit,
-				onDelete: handleDelete,
+				onEdit: onUpdate,
+				onDelete: onDelete,
 				suppressMouseEventHandling: () => true,
 			},
 		},
@@ -73,7 +67,7 @@ export function EventGrid({ data }: EventGridProps) {
 	const mobileColDefs: ColDef<EventModel>[] = [
 		{
 			headerName: "Datum",
-			valueGetter: (params) => formatDateSE(params.data!.start_at),
+			valueGetter: (params) => formatDateSE(params.data!.startAt),
 			suppressMovable: true,
 		},
 		{
@@ -89,8 +83,8 @@ export function EventGrid({ data }: EventGridProps) {
 			cellRenderer: ActionCellRenderer,
 			cellClass: "no-active-color",
 			cellRendererParams: {
-				onEdit: handleEdit,
-				onDelete: handleDelete,
+				onEdit: onUpdate,
+				onDelete: onDelete,
 				suppressMouseEventHandling: () => true,
 			},
 		},

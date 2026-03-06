@@ -5,8 +5,8 @@ import type { EventModel } from "../../constant/types";
 
 type ActionCellRendererParams = ICellRendererParams<EventModel> & {
 	data: EventModel;
-	onEdit: (data: EventModel) => void;
-	onDelete: (data: EventModel) => void;
+	onEdit: (data: EventModel) => EventModel;
+	onDelete: (data: EventModel) => EventModel;
 };
 
 export function ActionCellRenderer(params: ActionCellRendererParams) {

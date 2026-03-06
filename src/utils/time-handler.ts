@@ -65,3 +65,15 @@ export function isEndTimeAfterStartTime(start: Time, end: Time): boolean {
 
 	return endMinutes > startMinutes;
 }
+
+export function toTime(date: Date): Time {
+	return {
+		hour: date.getHours(),
+		minute: date.getMinutes(),
+	};
+}
+
+export function endTime(start: Date, durationMinutes: number): Time {
+	const end = calculateEndTimeSE(start, durationMinutes);
+	return toTime(end!);
+}

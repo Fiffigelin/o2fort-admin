@@ -59,6 +59,24 @@ export async function moveImageFile(img: UploadedFile): Promise<string> {
 	return newPath;
 }
 
+export async function fetchImage(imgPath: string): Promise<UploadedFile> {
+	const { data, error } = await supabase.storage
+		.from(BUCKET)
+		.createSignedUrl(imgPath, 60 * 60);
+
+	if (error) throw error;
+	if (!data) throw new Error("Could not fetch image");
+
+	console.log("fetchimage: ", data.signedUrl);
+	return {
+		name: imgPath.split("/").pop() ?? "",
+		url: data.signedUrl,
+		path: imgPath,
+		size: 0,
+		type: "image",
+	};
+}
+
 function sanitizeFileName(name: string) {
 	return name
 		.trim()

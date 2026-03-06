@@ -1,4 +1,4 @@
-import type { NewEvent } from "../../../constant/types";
+import type { UpdateEvent } from "../../../constant/types";
 import { useLocation, useNavigate } from "react-router-dom";
 import EventForm from "../../../components/event-form/event-form";
 import { useState } from "react";
@@ -9,21 +9,26 @@ export default function CreateEvent() {
 	const navigate = useNavigate();
 	const { createNewEvent, deleteTempImage } = useCreateEvent();
 
-	const state = location.state as { event: NewEvent };
-	const [event] = useState<NewEvent>(state.event);
+	const state = location.state as { event: UpdateEvent };
+	const [event] = useState<UpdateEvent>(state.event);
 
-	async function onSubmit(event: NewEvent) {
+	async function onSubmit(event: UpdateEvent) {
+		console.log(event);
 		if (!event) return;
+		console.log("innan context");
 		const result = await createNewEvent(event);
 
 		if (result) RouteHome();
 	}
 
-	async function onAbort() {
-		if (!event.image) return;
+	async function onAbort(event: UpdateEvent) {
+		if (event.id && event.id?.length > 0) {
+			RouteHome();
+			return;
+		}
 
 		try {
-			const result = await deleteTempImage(event.image);
+			const result = await deleteTempImage(event.file);
 
 			if (result) RouteHome();
 		} catch (err) {
@@ -36,15 +41,19 @@ export default function CreateEvent() {
 	}
 
 	return (
-		<section className="mt-24 md:mt-38 max-w-4xl w-full h-screen flex flex-col p-4 lg:mt-0 lg:p-8">
+		<section className="mt-24 md:mt-38 w-full max-w-4xl h-screen flex flex-col self-center p-4 lg:mt-0 lg:p-8">
 			<div className="w-full flex justify-center mb-8">
 				<img
-					src={event.image.url}
-					alt={event.image.name}
+					src={event.file.url}
+					alt={event.file.name}
 					className="object-cover"
 				/>
 			</div>
-			<EventForm initialEvent={event} onSubmit={onSubmit} onAbort={onAbort} />
+			<EventForm
+				initialEvent={event}
+				onSubmit={onSubmit}
+				onAbort={(value) => onAbort(value)}
+			/>
 		</section>
 	);
 }

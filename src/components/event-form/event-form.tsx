@@ -1,8 +1,8 @@
-import type { NewEvent, Time } from "../../constant/types";
+import type { Time, UpdateEvent } from "../../constant/types";
 import TextInput from "../input/text/text-input";
 import Datepicker from "../date-picker/date-picker";
 import TimePicker from "../time-picker/time-picker";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
 	createDuration,
 	createStartDate,
@@ -12,9 +12,9 @@ import { CustomButton } from "../custom-button/custom-button";
 import FormInfo from "../auth-form/form-info";
 
 type EventFormProps = {
-	initialEvent: NewEvent;
-	onSubmit: (event: NewEvent) => void;
-	onAbort: () => void;
+	initialEvent: UpdateEvent;
+	onSubmit: (event: UpdateEvent) => void;
+	onAbort: (event: UpdateEvent) => void;
 };
 
 type ValidType = {
@@ -27,144 +27,155 @@ export default function EventForm({
 	onSubmit,
 	onAbort,
 }: EventFormProps) {
-	const [title, setTitle] = useState<string>(initialEvent.title);
-	const [date, setDate] = useState<Date>();
-	const [start, setStartTime] = useState<Time | null>({ hour: 11, minute: 0 });
-	const [end, setEndTime] = useState<Time | null>({ hour: 17, minute: 0 });
-	const [showInfo, setShowInfo] = useState<boolean>(false);
+	// --- State ---
+	const [title, setTitle] = useState(initialEvent.title);
+	const [date, setDate] = useState<Date>(initialEvent.startAt);
+	const [start, setStartTime] = useState<Time | null>(initialEvent.time.start);
+	const [end, setEndTime] = useState<Time | null>(initialEvent.time.end);
+
+	const [hasSubmitted, setHasSubmitted] = useState(false);
+	const [showInfo, setShowInfo] = useState(false);
+
 	const [isTypeValid, setIsTypeValid] = useState<ValidType>({
-		title: false,
-		date: false,
+		title: initialEvent.title.trim().length > 2,
+		date: !!initialEvent.startAt,
 	});
 
-	function handleCloseInfo() {
-		setShowInfo(false);
-	}
+	// --- Computed values ---
+	const isTimeValid = useMemo(
+		() => (start && end ? isEndTimeAfterStartTime(start, end) : false),
+		[start, end],
+	);
 
-	function handleTitleChange(value: string) {
+	const isValid = useMemo(
+		() =>
+			isTypeValid.title &&
+			isTypeValid.date &&
+			!!date &&
+			!!start &&
+			!!end &&
+			isTimeValid &&
+			!!initialEvent.image,
+		[isTypeValid, date, start, end, isTimeValid, initialEvent.image],
+	);
+
+	// --- Handlers ---
+	const handleCloseInfo = () => setShowInfo(false);
+
+	const handleTitleChange = (value: string) => {
 		setTitle(value);
+		setIsTypeValid((prev) => ({
+			...prev,
+			title: value.trim().length > 2,
+		}));
+	};
 
-		if (value.length === 0 || value.trim().length > 2) {
-			setIsTypeValid((prev) => ({ ...prev, title: true }));
-		} else {
-			setIsTypeValid((prev) => ({ ...prev, title: false }));
-		}
-	}
-
-	function handleDateChange(value: Date) {
+	const handleDateChange = (value: Date) => {
 		setDate(value);
+		setIsTypeValid((prev) => ({ ...prev, date: !!value }));
+	};
 
-		setIsTypeValid((prev) => ({ ...prev, date: value ? true : false }));
-	}
-
-	function handleTimeChange(type: string, time: Time) {
+	const handleTimeChange = (type: "start" | "end", time: Time) => {
 		if (time.hour === null || time.minute === null) {
 			type === "start" ? setStartTime(null) : setEndTime(null);
 			return;
 		}
-
 		type === "start" ? setStartTime(time) : setEndTime(time);
-	}
+	};
 
-	function handleSubmit(e: React.FormEvent) {
-		e.preventDefault();
+	const handleSubmit = () => {
+		setHasSubmitted(true);
 
-		if (date && start) {
-			initialEvent.start_at = createStartDate(date, start);
+		if (!date || !start) return;
 
-			if (end) {
-				initialEvent.duration_minutes = createDuration(
-					initialEvent.start_at,
-					date,
-					end,
-				);
-			}
-		}
-
-		initialEvent.title = title;
+		const updatedEvent: UpdateEvent = {
+			...initialEvent,
+			title,
+			startAt: createStartDate(date, start),
+			durationMinutes: end
+				? createDuration(createStartDate(date, start), date, end)
+				: 0,
+		};
 
 		if (isValid) {
-			onSubmit(initialEvent);
+			onSubmit(updatedEvent);
 		} else {
 			setShowInfo(true);
 		}
-	}
-
-	const isTimeValid =
-		start && end ? isEndTimeAfterStartTime(start, end) : false;
-
-	const isValid =
-		isTypeValid.title &&
-		isTypeValid.date &&
-		!!date &&
-		!!start &&
-		!!end &&
-		isTimeValid &&
-		!!initialEvent.image;
+	};
 
 	return (
-		<form
-			onSubmit={handleSubmit}
-			noValidate
-			className="grid grid-cols-4 w-full gap-3 pb-10 lg:gap-6"
-		>
-			{showInfo && (
+		<div className="grid grid-cols-4 w-full gap-3 pb-10 lg:gap-6">
+			{/* Felmeddelande */}
+			{hasSubmitted && !isValid && showInfo && (
 				<FormInfo
 					message="Evenemang behöver titel, datum och tid"
 					onClose={handleCloseInfo}
-					status={"error"}
+					status="error"
 					className="col-span-4"
 				/>
 			)}
+
+			{/* Titel */}
 			<div className="col-span-4">
 				<TextInput
 					key="title"
 					value={title}
-					label={"Titel"}
-					onChange={(value) => handleTitleChange(value)}
+					label="Titel"
+					onChange={handleTitleChange}
 					valid={isTypeValid.title}
-					errorMessage="Behöver en titel på 3 tecken eller mer"
+					errorMessage="Behöver en titel på minst 3 tecken"
 				/>
 			</div>
+
+			{/* Datum */}
 			<div className="col-span-4 md:col-span-2">
 				<Datepicker
 					initialDate={date ?? new Date()}
-					onChange={(value) => handleDateChange(value)}
+					onChange={handleDateChange}
 				/>
 			</div>
+
+			{/* Start- och sluttid */}
 			<TimePicker
 				title="Starttid"
-				type={"start"}
+				type="start"
 				initiatedHour={start?.hour}
 				initiatedMinutes={start?.minute}
-				onChange={handleTimeChange}
+				onChange={(time) => handleTimeChange("start", time)}
 				className="col-span-2 md:col-span-1"
 			/>
 			<TimePicker
 				title="Sluttid"
-				type={"end"}
+				type="end"
 				initiatedHour={end?.hour}
 				initiatedMinutes={end?.minute}
-				onChange={handleTimeChange}
+				onChange={(time) => handleTimeChange("end", time)}
 				className="col-span-2 md:col-span-1"
 			/>
+
+			{/* Felmeddelande om tider */}
 			{!isTimeValid && (
 				<p className="col-span-2 text-red-500">
 					Sluttiden måste vara efter starttiden
 				</p>
 			)}
+
+			{/* Knappar */}
 			<CustomButton
+				type="button"
 				className="col-span-2 md:col-end-4 md:col-span-1"
-				onClick={onAbort}
-				title={"Avbryt"}
+				onClick={() => onAbort(initialEvent)}
+				title="Avbryt"
 				variant="secondary"
 			/>
 			<CustomButton
+				type="button"
 				className="col-span-2 md:col-end-5 md:col-span-1"
+				onClick={handleSubmit}
+				title="Spara"
 				variant="primary"
-				type="submit"
-				title={"Spara"}
 			/>
-		</form>
+		</div>
 	);
 }

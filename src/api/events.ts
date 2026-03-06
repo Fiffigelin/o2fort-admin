@@ -40,13 +40,32 @@ export const createEvent = async (event: UploadEvent): Promise<EventRow> => {
 		.insert({
 			title: event.title,
 			image_url: event.image,
-			duration_minutes: event.duration_minutes,
-			start_at_utc: event.start_at.toISOString(),
+			duration_minutes: event.durationMinutes,
+			start_at_utc: event.startAt.toISOString(),
 		})
 		.select()
 		.single();
 
 	if (error) throw error;
 	if (!data) throw new Error("Could not create event");
+	return data;
+};
+
+export const updateEvent = async (event: UploadEvent): Promise<EventRow> => {
+	const { data, error } = await supabase
+		.from("events")
+		.update({
+			title: event.title,
+			image_url: event.image,
+			duration_minutes: event.durationMinutes,
+			start_at_utc: event.startAt.toISOString(),
+		})
+		.eq("id", event.id)
+		.select()
+		.single();
+
+	if (error) throw error;
+	if (!data) throw new Error("Could not update event");
+
 	return data;
 };

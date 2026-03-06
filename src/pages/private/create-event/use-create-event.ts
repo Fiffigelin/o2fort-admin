@@ -1,7 +1,7 @@
 import { useEventsContext } from "../../../contexts/event/event-context";
 import type {
 	EventModel,
-	NewEvent,
+	UpdateEvent,
 	UploadedFile,
 } from "../../../constant/types";
 import { removeImage } from "../../../api/image-storage";
@@ -12,7 +12,7 @@ export function useCreateEvent() {
 	const { showToast } = useToastContext();
 
 	const createNewEvent = async (
-		eventData: NewEvent,
+		eventData: UpdateEvent,
 	): Promise<EventModel | undefined> => {
 		try {
 			const result = await addEvent(eventData);

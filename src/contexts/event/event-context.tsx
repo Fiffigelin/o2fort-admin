@@ -7,7 +7,7 @@ import {
 } from "react";
 import type {
 	EventModel,
-	NewEvent,
+	UpdateEvent,
 	UploadedFile,
 	UploadEvent,
 } from "../../constant/types";
@@ -18,6 +18,7 @@ import {
 	uploadTempImage,
 	moveImageFile,
 	removeImage,
+	fetchImage,
 } from "../../api/image-storage";
 
 interface EventContextType {
@@ -30,9 +31,10 @@ interface EventContextType {
 
 	fetchEvents: () => Promise<void>;
 	fetchUpcomingEvents: () => Promise<void>;
-	addEvent: (event: NewEvent) => Promise<EventModel | undefined>;
-	uploadEventImage: (file: File) => Promise<UploadedFile | undefined>;
+	addEvent: (event: UpdateEvent) => Promise<EventModel>;
+	uploadEventImage: (file: File) => Promise<UploadedFile>;
 	deleteTempImage: (file: UploadedFile) => Promise<boolean>;
+	fetchSingleImage: (imgPath: string) => Promise<UploadedFile>;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -53,22 +55,25 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 		return arr.map((d) => ({
 			id: d.id,
 			title: d.title,
-			start_at: new Date(d.start_at_utc),
-			duration_minutes: d.duration_minutes,
-			image_path: d.image_url,
-			created_at: new Date(d.created_at),
+			startAt: new Date(d.start_at_utc),
+			durationMinutes: d.duration_minutes,
+			imagePath: d.image_url,
+			createdAt: new Date(d.created_at),
 		}));
 	};
 
-	const mapEventForInsert = (event: NewEvent, newPath: string): UploadEvent => {
-		const newEvent: UploadEvent = {
+	const mapEventForInsert = (
+		event: UpdateEvent,
+		newPath: string,
+	): UploadEvent => {
+		const mapEvent: UploadEvent = {
 			title: event.title,
-			start_at: event.start_at,
-			duration_minutes: event.duration_minutes,
+			startAt: event.startAt,
+			durationMinutes: event.durationMinutes,
 			image: newPath,
 		};
 
-		return newEvent;
+		return mapEvent;
 	};
 
 	const fetchEvents = async () => {
@@ -97,12 +102,11 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
-	const addEvent = async (event: NewEvent): Promise<EventModel | undefined> => {
-		if (!user) return;
+	const addEvent = async (event: UpdateEvent): Promise<EventModel> => {
 		setLoading(true);
 
 		try {
-			const newImagePath = await moveImageFile(event.image);
+			const newImagePath = await moveImageFile(event.file);
 			const insertEvent = mapEventForInsert(event, newImagePath);
 			const data = await createEvent(insertEvent);
 			const mapped = mapEvents(data)[0];
@@ -111,10 +115,10 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 				setEvents((prev) => [mapped, ...prev]);
 
 				const now = new Date();
-				if (mapped.start_at >= now) {
+				if (mapped.startAt >= now) {
 					setUpcomingEvents((prev) =>
 						[...prev, mapped].sort(
-							(a, b) => a.start_at.getTime() - b.start_at.getTime(),
+							(a, b) => a.startAt.getTime() - b.startAt.getTime(),
 						),
 					);
 				}
@@ -125,14 +129,13 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 			return mapped;
 		} catch (error) {
 			console.error("Failed to fetch upcoming events:", error);
+			throw error;
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	const uploadEventImage = async (
-		file: File,
-	): Promise<UploadedFile | undefined> => {
+	const uploadEventImage = async (file: File): Promise<UploadedFile> => {
 		setLoadingImage(true);
 		try {
 			const data = await uploadTempImage(file);
@@ -142,6 +145,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 			return data;
 		} catch (error: unknown) {
 			console.error("Failed to upload image ", error);
+			throw error;
 		} finally {
 			setLoadingImage(false);
 		}
@@ -163,6 +167,15 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 		await fetchUpcomingEvents();
 	};
 
+	const fetchSingleImage = async (imageUrl: string): Promise<UploadedFile> => {
+		try {
+			return await fetchImage(imageUrl);
+		} catch (error: unknown) {
+			console.error("Failed to remove image ", error);
+			throw error;
+		}
+	};
+
 	useEffect(() => {
 		if (isAuthenticated) fetchAllEvents();
 	}, [isAuthenticated]);
@@ -181,6 +194,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 				addEvent,
 				uploadEventImage,
 				deleteTempImage,
+				fetchSingleImage,
 			}}
 		>
 			{children}

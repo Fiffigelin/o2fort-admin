@@ -1,13 +1,20 @@
 import DragDrop from "../../../components/drag-drop/drag-drop";
 import { useNavigate } from "react-router-dom";
-import type { NewEvent, UploadedFile } from "../../../constant/types";
+import type {
+	EventModel,
+	UpdateEvent,
+	UploadedFile,
+} from "../../../constant/types";
 import { useHome } from "./use-home";
 import LoadingSpinner from "../../../components/loading-spinner/loading-spinner";
 import { EventGrid } from "../../../components/ag-grid/event-grid";
+import { useCallback } from "react";
+import { useToastContext } from "../../../contexts/toast/toast-context";
 
 function Home() {
 	const navigate = useNavigate();
-	const { upcomingEvents, loadingUpcoming } = useHome();
+	const { showToast } = useToastContext();
+	const { upcomingEvents, loadingUpcoming, updateEvent } = useHome();
 
 	function handleImageUpload(img: UploadedFile) {
 		if (!img) {
@@ -15,17 +22,52 @@ function Home() {
 			return;
 		}
 
-		const newEvent: NewEvent = {
+		const newEvent: UpdateEvent = {
 			title: "",
-			start_at: new Date(),
-			duration_minutes: 0,
-			image: img,
+			startAt: new Date(),
+			durationMinutes: 0,
+			image: img.path,
+			file: img,
+			time: {
+				start: {
+					hour: 11,
+					minute: 0,
+				},
+				end: {
+					hour: 17,
+					minute: 0,
+				},
+			},
 		};
 
 		navigate("/update-event", {
 			state: { event: newEvent },
 		});
 	}
+
+	const handleUpdate = useCallback(
+		async (event: EventModel) => {
+			if (!event) {
+				showToast("error", "Kan inte ändra evenemang");
+			}
+
+			const fetchedFileEvent = await updateEvent(event);
+
+			console.log("ändrar eventet: ", event);
+			navigate("/update-event", {
+				state: { event: fetchedFileEvent },
+			});
+		},
+		[updateEvent],
+	);
+
+	const handleDelete = useCallback((event: EventModel) => {
+		if (!event) {
+			showToast("error", "Kan inte ändra evenemang");
+		}
+
+		console.log("tar bort eventet: ", event);
+	}, []);
 
 	return (
 		<section className="flex flex-col w-full h-screen p-8">
@@ -41,7 +83,11 @@ function Home() {
 						<LoadingSpinner size={24} />
 					</div>
 				) : (
-					<EventGrid data={upcomingEvents} />
+					<EventGrid
+						data={upcomingEvents}
+						onUpdate={handleUpdate}
+						onDelete={handleDelete}
+					/>
 				)}
 			</div>
 		</section>
