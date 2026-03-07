@@ -7,18 +7,22 @@ import { useCreateEvent } from "./use-create-event";
 export default function CreateEvent() {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { createNewEvent, deleteTempImage } = useCreateEvent();
+	const { createNewEvent, deleteTempImage, updateEvent } = useCreateEvent();
 
 	const state = location.state as { event: UpdateEvent };
 	const [event] = useState<UpdateEvent>(state.event);
 
 	async function onSubmit(event: UpdateEvent) {
-		console.log(event);
 		if (!event) return;
-		console.log("innan context");
-		const result = await createNewEvent(event);
 
-		if (result) RouteHome();
+		if (event.id && event.id?.length > 0) {
+			console.log("event id: ", event.id);
+			const result = await updateEvent(event);
+			if (result) RouteHome();
+		} else {
+			const result = await createNewEvent(event);
+			if (result) RouteHome();
+		}
 	}
 
 	async function onAbort(event: UpdateEvent) {

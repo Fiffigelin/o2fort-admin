@@ -12,7 +12,12 @@ import type {
 	UploadEvent,
 } from "../../constant/types";
 import { useAuth } from "../auth/auth-context";
-import { getAllEvents, getUpcomingEvents, createEvent } from "../../api/events";
+import {
+	getAllEvents,
+	getUpcomingEvents,
+	createEvent,
+	updateEvent,
+} from "../../api/events";
 import { useToastContext } from "../toast/toast-context";
 import {
 	uploadTempImage,
@@ -35,13 +40,13 @@ interface EventContextType {
 	uploadEventImage: (file: File) => Promise<UploadedFile>;
 	deleteTempImage: (file: UploadedFile) => Promise<boolean>;
 	fetchSingleImage: (imgPath: string) => Promise<UploadedFile>;
+	putEvent: (event: UpdateEvent) => Promise<EventModel>;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
 
 export const EventProvider = ({ children }: { children: ReactNode }) => {
 	const { user, isAuthenticated } = useAuth();
-	const { showToast } = useToastContext();
 	const [events, setEvents] = useState<EventModel[]>([]);
 	const [upcomingEvents, setUpcomingEvents] = useState<EventModel[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -71,6 +76,19 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 			startAt: event.startAt,
 			durationMinutes: event.durationMinutes,
 			image: newPath,
+		};
+
+		return mapEvent;
+	};
+
+	const mapEventForUpdate = (event: UpdateEvent): UploadEvent => {
+		const mapEvent: UploadEvent = {
+			id: event.id,
+			title: event.title,
+			startAt: event.startAt,
+			durationMinutes: event.durationMinutes,
+			image: event.image,
+			createdAt: event.createdAt,
 		};
 
 		return mapEvent;
@@ -125,7 +143,35 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 				return mapped;
 			}
 
-			showToast("success", "Lyckades skapa nytt evenemang!");
+			return mapped;
+		} catch (error) {
+			console.error("Failed to fetch upcoming events:", error);
+			throw error;
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	const putEvent = async (event: UpdateEvent): Promise<EventModel> => {
+		setLoading(true);
+
+		try {
+			const updatedEvent = mapEventForUpdate(event);
+			const data = await updateEvent(updatedEvent);
+			const mapped = mapEvents(data)[0];
+
+			if (mapped) {
+				setEvents((prev) => prev.map((e) => (e.id === mapped.id ? mapped : e)));
+
+				const now = new Date();
+				if (mapped.startAt >= now) {
+					setUpcomingEvents((prev) =>
+						[...prev.filter((e) => e.id !== mapped.id), mapped].sort(
+							(a, b) => a.startAt.getTime() - b.startAt.getTime(),
+						),
+					);
+				}
+			}
 			return mapped;
 		} catch (error) {
 			console.error("Failed to fetch upcoming events:", error);
@@ -195,6 +241,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 				uploadEventImage,
 				deleteTempImage,
 				fetchSingleImage,
+				putEvent,
 			}}
 		>
 			{children}

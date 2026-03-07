@@ -8,7 +8,7 @@ import { removeImage } from "../../../api/image-storage";
 import { useToastContext } from "../../../contexts/toast/toast-context";
 
 export function useCreateEvent() {
-	const { addEvent } = useEventsContext();
+	const { addEvent, putEvent } = useEventsContext();
 	const { showToast } = useToastContext();
 
 	const createNewEvent = async (
@@ -21,7 +21,21 @@ export function useCreateEvent() {
 			return result;
 		} catch (error: unknown) {
 			console.error("Failed to insert new event:", error);
-			showToast("success", "Kunde inte spara. Var god försök igen.");
+			showToast("error", "Kunde inte spara. Var god försök igen.");
+		}
+	};
+
+	const updateEvent = async (
+		eventData: UpdateEvent,
+	): Promise<EventModel | undefined> => {
+		try {
+			const result = await putEvent(eventData);
+			if (result) showToast("success", "Det lyckades att uppdatera eventet!");
+
+			return result;
+		} catch (error: unknown) {
+			console.error("Failed to insert new event:", error);
+			showToast("error", "Kunde inte uppdatera. Var god försök igen.");
 		}
 	};
 
@@ -34,5 +48,6 @@ export function useCreateEvent() {
 	return {
 		createNewEvent,
 		deleteTempImage,
+		updateEvent,
 	};
 }
