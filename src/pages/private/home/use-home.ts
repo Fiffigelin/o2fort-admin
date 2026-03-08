@@ -8,6 +8,7 @@ export function useHome() {
 		upcomingEvents,
 		loadingUpcomingEvents: loadingUpcoming,
 		fetchSingleImage,
+		deleteEventAndFile,
 	} = useEventsContext();
 	const { showToast } = useToastContext();
 
@@ -38,9 +39,20 @@ export function useHome() {
 		}
 	}
 
+	async function deleteEvent(event: EventModel) {
+		try {
+			const result = await deleteEventAndFile(event);
+			if (result) showToast("success", "Lyckades radera eventet");
+		} catch (error: unknown) {
+			showToast("error", "Kunde inte radera eventet");
+			throw error;
+		}
+	}
+
 	return {
 		upcomingEvents,
 		loadingUpcoming,
 		updateEvent,
+		deleteEvent,
 	};
 }

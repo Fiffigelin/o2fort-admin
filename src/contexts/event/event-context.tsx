@@ -17,13 +17,14 @@ import {
 	getUpcomingEvents,
 	createEvent,
 	updateEvent,
+	deleteEvent,
 } from "../../api/events";
-import { useToastContext } from "../toast/toast-context";
 import {
 	uploadTempImage,
 	moveImageFile,
 	removeImage,
 	fetchImage,
+	removeImageFromString,
 } from "../../api/image-storage";
 
 interface EventContextType {
@@ -41,6 +42,7 @@ interface EventContextType {
 	deleteTempImage: (file: UploadedFile) => Promise<boolean>;
 	fetchSingleImage: (imgPath: string) => Promise<UploadedFile>;
 	putEvent: (event: UpdateEvent) => Promise<EventModel>;
+	deleteEventAndFile: (event: EventModel) => Promise<boolean>;
 }
 
 const EventContext = createContext<EventContextType | undefined>(undefined);
@@ -81,13 +83,17 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 		return mapEvent;
 	};
 
-	const mapEventForUpdate = (event: UpdateEvent): UploadEvent => {
+	const mapEventForUpdate = (
+		event: UpdateEvent,
+		newPath?: string,
+	): UploadEvent => {
+		const path = newPath && newPath?.length > 0 ? newPath : event.image;
 		const mapEvent: UploadEvent = {
 			id: event.id,
 			title: event.title,
 			startAt: event.startAt,
 			durationMinutes: event.durationMinutes,
-			image: event.image,
+			image: path,
 			createdAt: event.createdAt,
 		};
 
@@ -156,7 +162,18 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 		setLoading(true);
 
 		try {
-			const updatedEvent = mapEventForUpdate(event);
+			let newPath = "";
+			const oldPath = event.image;
+
+			if (event.file.path !== event.image) {
+				newPath = await moveImageFile(event.file);
+
+				if (oldPath && oldPath !== newPath) {
+					await removeImageFromString(oldPath);
+				}
+			}
+
+			const updatedEvent = mapEventForUpdate(event, newPath);
 			const data = await updateEvent(updatedEvent);
 			const mapped = mapEvents(data)[0];
 
@@ -164,6 +181,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 				setEvents((prev) => prev.map((e) => (e.id === mapped.id ? mapped : e)));
 
 				const now = new Date();
+
 				if (mapped.startAt >= now) {
 					setUpcomingEvents((prev) =>
 						[...prev.filter((e) => e.id !== mapped.id), mapped].sort(
@@ -172,12 +190,33 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 					);
 				}
 			}
+
 			return mapped;
 		} catch (error) {
-			console.error("Failed to fetch upcoming events:", error);
+			console.error("Failed to update event:", error);
 			throw error;
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const deleteEventAndFile = async (event: EventModel): Promise<boolean> => {
+		try {
+			try {
+				await removeImageFromString(event.imagePath);
+			} catch (err) {
+				console.warn("Image deletion failed", err);
+			}
+
+			await deleteEvent(event.id);
+
+			setEvents((prev) => prev.filter((e) => e.id !== event.id));
+			setUpcomingEvents((prev) => prev.filter((e) => e.id !== event.id));
+
+			return true;
+		} catch (error) {
+			console.error("Failed to delete event:", error);
+			return false;
 		}
 	};
 
@@ -242,6 +281,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
 				deleteTempImage,
 				fetchSingleImage,
 				putEvent,
+				deleteEventAndFile,
 			}}
 		>
 			{children}

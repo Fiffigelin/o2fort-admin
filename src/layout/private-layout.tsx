@@ -24,7 +24,7 @@ export default function PrivateLayout() {
 			<Sidebar sidebarItems={navItems} />
 			<main className="flex-1 overflow-y-auto no-scrollbar">
 				<Toast toasts={toasts} onClose={remove} />;
-				<div className="max-w-7xl mx-auto flex flex-col justify-center">
+				<div className="max-w-7xl mx-auto h-screen flex flex-col justify-center">
 					<Outlet />
 				</div>
 			</main>

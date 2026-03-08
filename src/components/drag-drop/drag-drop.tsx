@@ -66,7 +66,7 @@ export default function DragDrop({ onChange }: DragDropProps) {
 			}}
 			onDragLeave={() => setDragging(false)}
 			onDrop={handleDrop}
-			className="bg-[#ffffff] border border-[#181d1f]/15 rounded-md h-11/12 p-4 lg:p-8 flex flex-col items-center justify-center cursor-pointer"
+			className="bg-[#ffffff] border border-[#181d1f]/15 rounded-md h-11/12 w-full lg:p-8 flex flex-col items-center justify-center cursor-pointer"
 		>
 			{loadingImage ? (
 				<div className="flex flex-col items-center justify-center z-20">

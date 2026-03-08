@@ -40,6 +40,18 @@ export async function removeImage(image: UploadedFile): Promise<boolean> {
 	}
 }
 
+export async function removeImageFromString(
+	imageUrl: string,
+): Promise<boolean> {
+	try {
+		const { data } = await supabase.storage.from(BUCKET).remove([imageUrl]);
+		return data ? true : false;
+	} catch (error: unknown) {
+		console.log("Something went wrong when deleting eventimage: ", error);
+		return false;
+	}
+}
+
 export async function moveImageFile(img: UploadedFile): Promise<string> {
 	if (!img.path) throw new Error("No path provided");
 

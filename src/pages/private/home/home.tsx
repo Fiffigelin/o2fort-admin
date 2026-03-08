@@ -14,7 +14,8 @@ import { useToastContext } from "../../../contexts/toast/toast-context";
 function Home() {
 	const navigate = useNavigate();
 	const { showToast } = useToastContext();
-	const { upcomingEvents, loadingUpcoming, updateEvent } = useHome();
+	const { upcomingEvents, loadingUpcoming, updateEvent, deleteEvent } =
+		useHome();
 
 	function handleImageUpload(img: UploadedFile) {
 		if (!img) {
@@ -61,12 +62,12 @@ function Home() {
 		[updateEvent],
 	);
 
-	const handleDelete = useCallback((event: EventModel) => {
+	const handleDelete = useCallback(async (event: EventModel) => {
 		if (!event) {
-			showToast("error", "Kan inte ändra evenemang");
+			showToast("error", "Kan inte radera evenemang");
 		}
 
-		console.log("tar bort eventet: ", event);
+		await deleteEvent(event);
 	}, []);
 
 	return (

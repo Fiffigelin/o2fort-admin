@@ -69,3 +69,16 @@ export const updateEvent = async (event: UploadEvent): Promise<EventRow> => {
 
 	return data;
 };
+
+export const deleteEvent = async (id: EventRow["id"]): Promise<EventRow> => {
+	const { data, error } = await supabase
+		.from("events")
+		.delete()
+		.eq("id", id)
+		.select()
+		.single();
+
+	if (error) throw error;
+
+	return data;
+};
