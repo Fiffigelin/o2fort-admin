@@ -1,6 +1,6 @@
 import { AnimatePresence } from "framer-motion";
 import { ToastItem } from "./toast-item";
-import type { Toast } from "../../contexts/toast/toast-context";
+import type { Toast } from "../../contexts/toast/toast-modal-context";
 
 type Props = {
 	toasts: Toast[];

@@ -3,7 +3,7 @@ import { BiSolidError } from "react-icons/bi";
 import { BiParty } from "react-icons/bi";
 import { MdOutlineClose } from "react-icons/md";
 import { motion } from "motion/react";
-import type { Toast } from "../../contexts/toast/toast-context";
+import type { Toast } from "../../contexts/toast/toast-modal-context";
 
 type ToastProps = {
 	toast: Toast;

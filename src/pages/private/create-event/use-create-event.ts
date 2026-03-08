@@ -5,11 +5,11 @@ import type {
 	UploadedFile,
 } from "../../../constant/types";
 import { removeImage } from "../../../api/image-storage";
-import { useToastContext } from "../../../contexts/toast/toast-context";
+import { useToastModalContext } from "../../../contexts/toast/toast-modal-context";
 
 export function useCreateEvent() {
 	const { addEvent, putEvent } = useEventsContext();
-	const { showToast } = useToastContext();
+	const { showToast } = useToastModalContext();
 
 	const createNewEvent = async (
 		eventData: UpdateEvent,

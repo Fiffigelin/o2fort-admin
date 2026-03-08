@@ -3,7 +3,7 @@ import { RiImageAiLine } from "react-icons/ri";
 import type { UploadedFile } from "../../constant/types";
 import LoadingSpinner from "../loading-spinner/loading-spinner";
 import { useEventsContext } from "../../contexts/event/event-context";
-import { useToastContext } from "../../contexts/toast/toast-context";
+import { useToastModalContext } from "../../contexts/toast/toast-modal-context";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
@@ -13,7 +13,7 @@ export type DragDropProps = {
 
 export default function DragDrop({ onChange }: DragDropProps) {
 	const { loadingImage, uploadEventImage } = useEventsContext();
-	const { showToast } = useToastContext();
+	const { showToast } = useToastModalContext();
 	const [dragging, setDragging] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -66,7 +66,7 @@ export default function DragDrop({ onChange }: DragDropProps) {
 			}}
 			onDragLeave={() => setDragging(false)}
 			onDrop={handleDrop}
-			className="bg-[#ffffff] border border-[#181d1f]/15 rounded-md h-11/12 w-full lg:p-8 flex flex-col items-center justify-center cursor-pointer"
+			className="bg-[#ffffff] border p-2 border-[#181d1f]/15 rounded-md h-full w-full lg:p-8 flex flex-col items-center justify-center cursor-pointer"
 		>
 			{loadingImage ? (
 				<div className="flex flex-col items-center justify-center z-20">

@@ -9,13 +9,13 @@ import Home from "../pages/private/home/home";
 import Wiki from "../pages/private/wiki/wiki";
 import CreateEvent from "../pages/private/create-event/create-event";
 import Event from "../pages/private/event/Event";
-import { ToastProvider } from "../contexts/toast/toast-context";
+import { ToastModalProvider } from "../contexts/toast/toast-modal-context";
 
 export default function AppRoutes() {
 	const { isAuthenticated } = useAuth();
 
 	return (
-		<ToastProvider>
+		<ToastModalProvider>
 			<EventProvider>
 				<BrowserRouter>
 					<Routes>
@@ -43,6 +43,6 @@ export default function AppRoutes() {
 					</Routes>
 				</BrowserRouter>
 			</EventProvider>
-		</ToastProvider>
+		</ToastModalProvider>
 	);
 }

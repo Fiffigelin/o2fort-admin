@@ -1,6 +1,6 @@
 import type { EventModel, UpdateEvent } from "../../../constant/types";
 import { useEventsContext } from "../../../contexts/event/event-context";
-import { useToastContext } from "../../../contexts/toast/toast-context";
+import { useToastModalContext } from "../../../contexts/toast/toast-modal-context";
 import { endTime, toTime } from "../../../utils/time-handler";
 
 export function useHome() {
@@ -10,7 +10,7 @@ export function useHome() {
 		fetchSingleImage,
 		deleteEventAndFile,
 	} = useEventsContext();
-	const { showToast } = useToastContext();
+	const { showToast } = useToastModalContext();
 
 	async function updateEvent(event: EventModel): Promise<UpdateEvent> {
 		try {
