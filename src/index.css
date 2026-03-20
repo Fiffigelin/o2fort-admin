@@ -2,6 +2,7 @@
 
 :root {
 	--color-yellow: #e99f1b;
+	--yellow-accent: #edb043;
 	--color-dark-grey: #181818;
 	--color-white: #fcf7f7;
 	--color-black: #000000;
@@ -13,6 +14,9 @@
 	--color-text-secondary: #b0b0b0;
 	--color-border: #444444;
 	--color-accent: #888888;
+
+	--foreground: #1f242e;
+	--sidebar-accent: #2d3443;
 }
 @font-face {
 	font-family: "Capture";
