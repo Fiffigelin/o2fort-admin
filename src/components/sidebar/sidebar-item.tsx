@@ -71,7 +71,7 @@ export function SidebarItem({ item, onClick }: NavbarItemProps) {
 			<div
 				className="
           flex items-center gap-6 p-5
-          text-(--color-text-secondary) hover:bg-(--color-border) hover:text-white
+          text-(--color-text-secondary) hover:bg-[var(--sidebar-accent)] hover:text-[var(--color-yellow)]
           transition-colors duration-300
         "
 			>

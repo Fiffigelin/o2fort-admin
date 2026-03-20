@@ -11,34 +11,23 @@ import { EventGrid } from "../../../components/ag-grid/event-grid";
 import { useCallback } from "react";
 import { useToastModalContext } from "../../../contexts/toast/toast-modal-context";
 import ActivityChart from "../../../components/activity-chart/activity-chart";
+import UpcomingEventsChart from "../../../components/upcoming-events-chart/upcoming-events-chart";
 
 function Home() {
 	const navigate = useNavigate();
 	const { showToast, showModal } = useToastModalContext();
-	const { events, upcomingEvents, loadingUpcoming, updateEvent, deleteEvent } =
-		useHome();
-
-	function groupEventsByMonth(events: EventModel[], monthsBack = 6) {
-		const result = new Array(monthsBack).fill(0);
-		const today = new Date();
-		const currentMonth = today.getMonth();
-		const currentYear = today.getFullYear();
-
-		events.forEach((event) => {
-			const date = new Date(event.startAt);
-			const monthDiff =
-				(currentYear - date.getFullYear()) * 12 +
-				(currentMonth - date.getMonth());
-
-			if (monthDiff >= 0 && monthDiff < monthsBack) {
-				result[monthsBack - 1 - monthDiff]++;
-			}
-		});
-
-		return result;
-	}
+	const {
+		events,
+		upcomingEvents,
+		loadingUpcoming,
+		updateEvent,
+		deleteEvent,
+		groupEventsByMonth,
+		getUpcomingEvents,
+	} = useHome();
 
 	const chartData = groupEventsByMonth(events, 6);
+	const upcomingEventsChart = getUpcomingEvents(upcomingEvents, 4);
 
 	function handleImageUpload(img: UploadedFile) {
 		if (!img) return;
@@ -91,9 +80,16 @@ function Home() {
 				<DragDrop onChange={(value) => handleImageUpload(value)} />
 			</div>
 
-			<ActivityChart chartData={chartData} />
+			<div className="flex flex-col justify-between md:flex-row">
+				<ActivityChart chartData={chartData} />
+				<UpcomingEventsChart
+					events={upcomingEventsChart}
+					onUpdate={handleUpdate}
+					onDelete={handleDelete}
+				/>
+			</div>
 
-			<div className="w-full h-1/3 mt-4 lg:mt-12">
+			{/* <div className="w-full h-1/3 mt-4 lg:mt-12">
 				<h2 className="font-bold">Kommande evengemang</h2>
 				{loadingUpcoming ? (
 					<div className="flex justify-center items-center h-full">
@@ -106,7 +102,7 @@ function Home() {
 						onDelete={handleDelete}
 					/>
 				)}
-			</div>
+			</div> */}
 		</section>
 	);
 }

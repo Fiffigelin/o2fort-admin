@@ -82,9 +82,11 @@ export default function ActivityChart({
 		<div className="flex flex-col w-full max-w-4xl mx-auto px-4 py-10 bg-[#ffffff] rounded-lg shadow">
 			{/* Header */}
 			<div className="mb-4 flex justify-between">
-				<h3 className="text-lg font-semibold text-gray-800">Antal Events</h3>
+				<h3 className="text-lg font-semibold text-(--font-header)">
+					Antal Evenemang
+				</h3>
 				<div className="flex gap-4 items-center">
-					<p className="text-sm text-gray-600">Månadsvis aktivitet</p>
+					<p className="text-sm text-(--muted-text)">Månadsvis aktivitet</p>
 					<p className="bg-(--color-yellow) h-2 w-2 rounded-full"></p>
 				</div>
 			</div>
@@ -92,20 +94,22 @@ export default function ActivityChart({
 			{/* Chart */}
 			<div className="flex">
 				{/* Y-axis */}
-				<div className="flex flex-col justify-between mr-4 h-[200px] text-sm text-gray-600">
+				<div className="flex flex-col justify-between mr-4 h-[200px] text-sm">
 					{tickValues.map((tick, idx) => (
 						<div
 							key={idx}
 							className="relative flex items-center h-[calc(100%/(numTicks))]"
 						>
-							<span className="-left-12 w-full text-right">{tick}</span>
+							<span className="absolute -left-8 w-10 text-right text-(--muted-text) top-1/2 -translate-y-1/2 text-xs">
+								{tick}
+							</span>
 						</div>
 					))}
 				</div>
 
 				{/* Bars + background lines */}
 				<div
-					className="relative flex-1 flex items-end h-[200px] w-full"
+					className="relative flex-1 flex items-end h-50 w-full"
 					style={{
 						background: `repeating-linear-gradient(to bottom, #eee, #eee 1px, #fff 1px, #fff ${100 / numTicks}%)`,
 					}}
@@ -113,7 +117,7 @@ export default function ActivityChart({
 					{chartData.map((value, idx) => {
 						const barHeight = (value / yAxisMax) * 200;
 						return (
-							<div key={idx} className="flex-1 px-2 relative cursor-pointer">
+							<div key={idx} className="flex-1 px-2 relative">
 								<div
 									className="bg-(--color-yellow) hover:bg-(--yellow-accent) w-full rounded-md transition-all relative z-10"
 									style={{ height: `${barHeight}px` }}
@@ -121,7 +125,7 @@ export default function ActivityChart({
 									onMouseLeave={hideTooltip}
 								/>
 								{/* Labels */}
-								<div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 text-gray-700 text-sm text-center">
+								<div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 text-(--muted-text) text-sm text-center">
 									{labels[idx]}
 								</div>
 							</div>

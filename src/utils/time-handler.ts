@@ -77,3 +77,8 @@ export function endTime(start: Date, durationMinutes: number): Time {
 	const end = calculateEndTimeSE(start, durationMinutes);
 	return toTime(end!);
 }
+
+export function setTime(startDate: Date, durationMinutes: number): string {
+	const end = calculateEndTimeSE(startDate, durationMinutes);
+	return `${formatTimeSE(startDate)}–${formatTimeSE(end)}`;
+}

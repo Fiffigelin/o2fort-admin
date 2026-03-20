@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Onest:wght@100..900&family=Pacifico&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -17,6 +19,13 @@
 
 	--foreground: #1f242e;
 	--sidebar-accent: #2d3443;
+	--border: #e2e4e9;
+	--muted-text: #676d79;
+	--font-header: #2b303b;
+	--muted-chart: #f0f2f480;
+
+	--font-display: "Plus Jakarta Sans", sans-serif;
+	--font-cursive: "Pacifico", cursive;
 }
 @font-face {
 	font-family: "Capture";
@@ -79,10 +88,9 @@ body {
 }
 
 h1 {
-	font-size: clamp(2rem, 5vw, 4rem);
-	line-height: 1.2;
+	font-size: clamp(1rem, 5vw, 2rem);
+	line-height: 1.5;
 	font-weight: 700;
-	margin-bottom: 1rem;
 }
 
 h2 {
@@ -101,5 +109,14 @@ h3,
 
 p {
 	font-size: clamp(1rem, 2.5vw, 1.25rem);
-	line-height: 1.6;
+	line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-display);
 }

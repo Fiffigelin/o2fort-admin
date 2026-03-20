@@ -17,7 +17,7 @@ export default function Sidebar({ sidebarItems }: NavItem) {
 
 	const LOGOUT: NavbarItem = {
 		label: "Logga ut",
-		icon: <FiLogOut size={24} />,
+		icon: <FiLogOut size={30} />,
 		to: "",
 	};
 
@@ -33,7 +33,7 @@ export default function Sidebar({ sidebarItems }: NavItem) {
 	return (
 		<>
 			{/* DESKTOP */}
-			<aside className="hidden lg:flex flex-col sticky h-full w-105 bg-(--color-sidebar) shadow-lg text-2xl">
+			<aside className="hidden lg:flex flex-col sticky h-full w-85 bg-[var(--foreground)] shadow-lg text-2xl">
 				<a href="/" className="flex justify-center py-8">
 					<img className="" src="src/assets/logo.png" alt="logo" />
 				</a>

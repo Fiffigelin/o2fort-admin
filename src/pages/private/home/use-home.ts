@@ -50,11 +50,45 @@ export function useHome() {
 		}
 	}
 
+	function groupEventsByMonth(events: EventModel[], monthsBack = 6) {
+		const result = new Array(monthsBack).fill(0);
+		const today = new Date();
+		const currentMonth = today.getMonth();
+		const currentYear = today.getFullYear();
+
+		events.forEach((event) => {
+			const date = new Date(event.startAt);
+			const monthDiff =
+				(currentYear - date.getFullYear()) * 12 +
+				(currentMonth - date.getMonth());
+
+			if (monthDiff >= 0 && monthDiff < monthsBack) {
+				result[monthsBack - 1 - monthDiff]++;
+			}
+		});
+
+		return result;
+	}
+
+	function getUpcomingEvents(events: EventModel[], limit = 4) {
+		const today = new Date();
+		today.setHours(0, 0, 0, 0);
+
+		return events
+			.filter((event) => new Date(event.startAt) >= today)
+			.sort(
+				(a, b) => new Date(a.startAt).getTime() - new Date(b.startAt).getTime(),
+			)
+			.slice(0, limit);
+	}
+
 	return {
 		events,
 		upcomingEvents,
 		loadingUpcoming,
 		updateEvent,
 		deleteEvent,
+		groupEventsByMonth,
+		getUpcomingEvents,
 	};
 }
