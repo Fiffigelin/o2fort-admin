@@ -5,6 +5,7 @@ import { endTime, toTime } from "../../../utils/time-handler";
 
 export function useHome() {
 	const {
+		events,
 		upcomingEvents,
 		loadingUpcomingEvents: loadingUpcoming,
 		fetchSingleImage,
@@ -50,6 +51,7 @@ export function useHome() {
 	}
 
 	return {
+		events,
 		upcomingEvents,
 		loadingUpcoming,
 		updateEvent,

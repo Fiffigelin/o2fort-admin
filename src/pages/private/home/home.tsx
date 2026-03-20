@@ -10,12 +10,35 @@ import LoadingSpinner from "../../../components/loading-spinner/loading-spinner"
 import { EventGrid } from "../../../components/ag-grid/event-grid";
 import { useCallback } from "react";
 import { useToastModalContext } from "../../../contexts/toast/toast-modal-context";
+import ActivityChart from "../../../components/activity-chart/activity-chart";
 
 function Home() {
 	const navigate = useNavigate();
 	const { showToast, showModal } = useToastModalContext();
-	const { upcomingEvents, loadingUpcoming, updateEvent, deleteEvent } =
+	const { events, upcomingEvents, loadingUpcoming, updateEvent, deleteEvent } =
 		useHome();
+
+	function groupEventsByMonth(events: EventModel[], monthsBack = 6) {
+		const result = new Array(monthsBack).fill(0);
+		const today = new Date();
+		const currentMonth = today.getMonth();
+		const currentYear = today.getFullYear();
+
+		events.forEach((event) => {
+			const date = new Date(event.startAt);
+			const monthDiff =
+				(currentYear - date.getFullYear()) * 12 +
+				(currentMonth - date.getMonth());
+
+			if (monthDiff >= 0 && monthDiff < monthsBack) {
+				result[monthsBack - 1 - monthDiff]++;
+			}
+		});
+
+		return result;
+	}
+
+	const chartData = groupEventsByMonth(events, 6);
 
 	function handleImageUpload(img: UploadedFile) {
 		if (!img) return;
@@ -67,6 +90,8 @@ function Home() {
 				<h2 className="font-bold">Skapa nytt evengemang</h2>
 				<DragDrop onChange={(value) => handleImageUpload(value)} />
 			</div>
+
+			<ActivityChart chartData={chartData} />
 
 			<div className="w-full h-1/3 mt-4 lg:mt-12">
 				<h2 className="font-bold">Kommande evengemang</h2>
