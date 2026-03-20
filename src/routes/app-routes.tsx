@@ -8,7 +8,7 @@ import Login from "../pages/public/login";
 import Home from "../pages/private/home/home";
 import Wiki from "../pages/private/wiki/wiki";
 import CreateEvent from "../pages/private/create-event/create-event";
-import Event from "../pages/private/event/Event";
+import Events from "../pages/private/event/events";
 import { ToastModalProvider } from "../contexts/toast/toast-modal-context";
 
 export default function AppRoutes() {
@@ -38,7 +38,7 @@ export default function AppRoutes() {
 							<Route path="/home" element={<Home />} />
 							<Route path="/wiki" element={<Wiki />} />
 							<Route path="/update-event" element={<CreateEvent />} />
-							<Route path="/event" element={<Event />} />
+							<Route path="/event" element={<Events />} />
 						</Route>
 					</Routes>
 				</BrowserRouter>

@@ -19,8 +19,8 @@ export default function CreateEvent() {
 
 	const isEditing = Boolean(event.id);
 
-	function routeHome() {
-		navigate("/home");
+	function routeBack() {
+		navigate(-1);
 	}
 
 	// -------- SUBMIT --------
@@ -30,10 +30,10 @@ export default function CreateEvent() {
 		try {
 			if (isEditing) {
 				const result = await updateEvent(updatedEvent);
-				if (result) routeHome();
+				if (result) routeBack();
 			} else {
 				const result = await createNewEvent(updatedEvent);
-				if (result) routeHome();
+				if (result) routeBack();
 			}
 		} catch (error) {
 			console.error(error);
@@ -45,14 +45,14 @@ export default function CreateEvent() {
 		try {
 			if (!isEditing) {
 				await deleteTempImage(updatedEvent.file);
-				return routeHome();
+				return routeBack();
 			}
 
 			if (updatedEvent.file.url !== updatedEvent.image) {
 				await deleteTempImage(updatedEvent.file);
 			}
 
-			routeHome();
+			routeBack();
 		} catch (error) {
 			console.error(error);
 		}

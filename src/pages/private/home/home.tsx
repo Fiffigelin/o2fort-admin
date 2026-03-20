@@ -29,7 +29,9 @@ function Home() {
 			time: { start: { hour: 11, minute: 0 }, end: { hour: 17, minute: 0 } },
 		};
 
-		navigate("/update-event", { state: { event: newEvent } });
+		navigate("/update-event", {
+			state: { event: newEvent },
+		});
 	}
 
 	const handleUpdate = useCallback(
@@ -54,7 +56,6 @@ function Home() {
 	}, []);
 
 	const confirmDelete = async (event: EventModel) => {
-		console.log("här");
 		if (!event) return;
 
 		await deleteEvent(event);

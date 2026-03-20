@@ -27,7 +27,7 @@ export default function PrivateLayout() {
 			<main className="flex-1 overflow-y-auto no-scrollbar">
 				<Toast toasts={toasts} onClose={removeToast} />;
 				<Modal isVisible={isModalVisible} modalItem={modal} />
-				<div className="max-w-7xl mx-auto h-screen flex flex-col justify-center">
+				<div className="max-w-7xl mx-auto h-screen flex flex-col justify-center p-4 md:p-8">
 					<Outlet />
 				</div>
 			</main>
